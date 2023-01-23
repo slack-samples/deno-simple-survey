@@ -1,8 +1,8 @@
 # Deno Simple Survey App
 
 This app demonstrates multi-stage workflows for requesting and collecting
-feedback on messages, all starting at the press of a reaction. Responses are
-stored in a dynamically created Google Sheet.
+feedback on messages, all starting at the press of a reaction, with responses
+being stored in a dynamically created Google Sheet.
 
 **Guide Outline**:
 
