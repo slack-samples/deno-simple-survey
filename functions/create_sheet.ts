@@ -77,13 +77,13 @@ export default SlackFunction(
       }),
     });
 
-    if (!sheets.ok) {
+    const body = await sheets.json();
+    if (body.error) {
       return {
-        error: `Failed to create the survey spreadsheet: ${sheets.statusText}`,
+        error: `Failed to create the survey spreadsheet: ${body.error.message}`,
       };
     }
 
-    const body = await sheets.json();
     return {
       outputs: {
         google_spreadsheet_id: body.spreadsheetId,
