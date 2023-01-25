@@ -16,7 +16,7 @@ const RemoveSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
   },
   inputs: {
     channel_id: { value: "{{data.channel_id}}" },
-    message_ts: { value: "{{data.message_ts}}" },
+    parent_ts: { value: "{{data.message_ts}}" },
     reactor_id: { value: "{{data.user_id}}" },
   },
 };

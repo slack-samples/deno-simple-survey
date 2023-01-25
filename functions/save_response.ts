@@ -16,6 +16,7 @@ export const SaveResponseFunctionDefinition = DefineFunction({
       },
       google_spreadsheet_id: {
         type: Schema.types.string,
+        description: "Spreadsheet ID for storing survey results",
       },
       impression: {
         type: Schema.types.string,

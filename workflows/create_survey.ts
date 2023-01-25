@@ -11,10 +11,22 @@ const CreateSurveyWorkflow = DefineWorkflow({
   description: "Add a request for feedback to a message",
   input_parameters: {
     properties: {
-      channel_id: { type: Schema.slack.types.channel_id },
-      parent_ts: { type: Schema.types.string },
-      parent_url: { type: Schema.types.string },
-      reactor_id: { type: Schema.slack.types.user_id },
+      channel_id: {
+        type: Schema.slack.types.channel_id,
+        description: "The channel containing the reacted message",
+      },
+      parent_ts: {
+        type: Schema.types.string,
+        description: "Message timestamp of the reacted message",
+      },
+      parent_url: {
+        type: Schema.types.string,
+        description: "Permalink to the reacted message",
+      },
+      reactor_id: {
+        type: Schema.slack.types.user_id,
+        description: "User that added the reacji",
+      },
     },
     required: ["channel_id", "parent_ts", "parent_url", "reactor_id"],
   },

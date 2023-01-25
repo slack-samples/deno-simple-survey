@@ -7,18 +7,27 @@ const RemoveSurveyWorkflow = DefineWorkflow({
   description: "Delete the threaded request for a survey",
   input_parameters: {
     properties: {
-      channel_id: { type: Schema.slack.types.channel_id },
-      message_ts: { type: Schema.types.string },
-      reactor_id: { type: Schema.slack.types.user_id },
+      channel_id: {
+        type: Schema.slack.types.channel_id,
+        description: "The channel containing the un-reacted message",
+      },
+      parent_ts: {
+        type: Schema.types.string,
+        description: "Message timestamp of the un-reacted message",
+      },
+      reactor_id: {
+        type: Schema.slack.types.user_id,
+        description: "User that removed the reacji",
+      },
     },
-    required: ["channel_id", "message_ts", "reactor_id"],
+    required: ["channel_id", "parent_ts", "reactor_id"],
   },
 });
 
 // Step 1: Delete prompt/survey message and link trigger
 RemoveSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefintion, {
   channel_id: RemoveSurveyWorkflow.inputs.channel_id,
-  parent_ts: RemoveSurveyWorkflow.inputs.message_ts,
+  parent_ts: RemoveSurveyWorkflow.inputs.parent_ts,
   reactor_id: RemoveSurveyWorkflow.inputs.reactor_id,
 });
 

@@ -8,8 +8,14 @@ const AnswerSurveyWorkflow = DefineWorkflow({
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },
-      google_spreadsheet_id: { type: Schema.types.string },
-      reactor_access_token_id: { type: Schema.types.string },
+      google_spreadsheet_id: {
+        type: Schema.types.string,
+        description: "Spreadsheet ID for storing survey results",
+      },
+      reactor_access_token_id: {
+        type: Schema.types.string,
+        description: "External authentication access token for the reactor",
+      },
     },
     required: [
       "interactivity",
