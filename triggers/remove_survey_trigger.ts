@@ -1,14 +1,14 @@
 import { Trigger } from "deno-slack-api/types.ts";
 import RemoveSurveyWorkflow from "../workflows/remove_survey.ts";
 
-const removeSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
+const RemoveSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
   type: "event",
   name: "Survey reacji removed",
   description: "Remove a survey from thread by removing the reacji",
   workflow: `#/workflows/${RemoveSurveyWorkflow.definition.callback_id}`,
   event: {
     event_type: "slack#/events/reaction_removed",
-    channel_ids: ["C04KQTP20UE"],
+    channel_ids: [""], // Channel IDs are added by the configurator workflow
     filter: {
       version: 1,
       root: { statement: "{{data.reaction}} == clipboard" },
@@ -21,4 +21,4 @@ const removeSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
   },
 };
 
-export default removeSurveyTrigger;
+export default RemoveSurveyTrigger;

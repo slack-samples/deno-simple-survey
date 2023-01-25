@@ -3,6 +3,7 @@ import { Manifest } from "deno-slack-sdk/mod.ts";
 import GoogleProvider from "./external_auth/google_provider.ts";
 import SurveyDatastore from "./datastores/survey_datastore.ts";
 
+import ConfiguratorWorkflow from "./workflows/configurator.ts";
 import AnswerSurveyWorkflow from "./workflows/answer_survey.ts";
 import CreateSurveyWorkflow from "./workflows/create_survey.ts";
 import RemoveSurveyWorkflow from "./workflows/remove_survey.ts";
@@ -15,6 +16,7 @@ export default Manifest({
   externalAuthProviders: [GoogleProvider],
   datastores: [SurveyDatastore],
   workflows: [
+    ConfiguratorWorkflow,
     AnswerSurveyWorkflow,
     CreateSurveyWorkflow,
     PromptSurveyWorkflow,
@@ -26,6 +28,7 @@ export default Manifest({
     "chat:write",
     "chat:write.public",
     "reactions:read",
+    "triggers:read",
     "triggers:write",
     "datastore:read",
     "datastore:write",
