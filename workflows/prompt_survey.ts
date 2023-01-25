@@ -27,7 +27,7 @@ const PromptSurveyWorkflow = DefineWorkflow({
 });
 
 // Step 1: Collect the URL of the reacted message
-const ParentPermalink = PromptSurveyWorkflow.addStep(
+const parentPermalink = PromptSurveyWorkflow.addStep(
   GetMessageLinkFunctionDefinition,
   {
     channel_id: PromptSurveyWorkflow.inputs.channel_id,
@@ -36,22 +36,22 @@ const ParentPermalink = PromptSurveyWorkflow.addStep(
 );
 
 // Step 2: Create a link trigger for the survey prompt
-const PromptTrigger = PromptSurveyWorkflow.addStep(
+const promptTrigger = PromptSurveyWorkflow.addStep(
   CreatePromptTriggerFunctionDefinition,
   {
     channel_id: PromptSurveyWorkflow.inputs.channel_id,
     parent_ts: PromptSurveyWorkflow.inputs.parent_ts,
-    parent_url: ParentPermalink.outputs.permalink,
+    parent_url: parentPermalink.outputs.permalink,
   },
 );
 
 // Step 3: Prompt the reactor for survey creation
-const PromptMessage = PromptSurveyWorkflow.addStep(
+const promptMessage = PromptSurveyWorkflow.addStep(
   Schema.slack.functions.SendDm,
   {
     user_id: PromptSurveyWorkflow.inputs.reactor_id,
     message:
-      `Would you like to <${PromptTrigger.outputs.prompt_url}|create a new survey> for <${ParentPermalink.outputs.permalink}|this message>?`,
+      `Would you like to <${promptTrigger.outputs.prompt_url}|create a new survey> for <${parentPermalink.outputs.permalink}|this message>?`,
   },
 );
 
@@ -60,8 +60,8 @@ PromptSurveyWorkflow.addStep(SaveSurveyFunctionDefinition, {
   channel_id: PromptSurveyWorkflow.inputs.channel_id,
   parent_ts: PromptSurveyWorkflow.inputs.parent_ts,
   reactor_id: PromptSurveyWorkflow.inputs.reactor_id,
-  trigger_id: PromptTrigger.outputs.prompt_id,
-  trigger_ts: PromptMessage.outputs.message_ts,
+  trigger_id: promptTrigger.outputs.prompt_id,
+  trigger_ts: promptMessage.outputs.message_ts,
   survey_stage: "PROMPT",
 });
 

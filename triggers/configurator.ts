@@ -1,7 +1,7 @@
 import { Trigger } from "deno-slack-api/types.ts";
 import ConfiguratorWorkflow from "../workflows/configurator.ts";
 
-const ConfiguratorTrigger: Trigger<typeof ConfiguratorWorkflow.definition> = {
+const configuratorTrigger: Trigger<typeof ConfiguratorWorkflow.definition> = {
   type: "shortcut",
   name: "Channel configurator for Simple Survey",
   description: "Configure the channels where reactions prompt for a survey",
@@ -11,4 +11,4 @@ const ConfiguratorTrigger: Trigger<typeof ConfiguratorWorkflow.definition> = {
   },
 };
 
-export default ConfiguratorTrigger;
+export default configuratorTrigger;

@@ -1,7 +1,7 @@
 import { Trigger } from "deno-slack-api/types.ts";
 import PromptSurveyWorkflow from "../workflows/prompt_survey.ts";
 
-const PromptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
+const promptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
   type: "event",
   name: "Survey reacji added",
   description: "Initiate survey creation by adding a clipboard reacji",
@@ -21,4 +21,4 @@ const PromptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
   },
 };
 
-export default PromptSurveyTrigger;
+export default promptSurveyTrigger;

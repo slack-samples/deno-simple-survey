@@ -1,8 +1,8 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 
 import { findReactionTriggers } from "./internals/trigger_operations.ts";
-import PromptSurveyTrigger from "../triggers/prompt_survey_trigger.ts";
-import RemoveSurveyTrigger from "../triggers/remove_survey_trigger.ts";
+import promptSurveyTrigger from "../triggers/prompt_survey_trigger.ts";
+import removeSurveyTrigger from "../triggers/remove_survey_trigger.ts";
 
 export const ConfiguratorFunctionDefinition = DefineFunction({
   callback_id: "configure",
@@ -54,17 +54,17 @@ export default SlackFunction(
 
     if (triggers === undefined || triggers.length === 0) {
       // Create new event triggers if none exist
-      PromptSurveyTrigger.event.channel_ids = channelIds;
+      promptSurveyTrigger.event.channel_ids = channelIds;
       const createPromptTrigger = await client.workflows.triggers.create(
-        PromptSurveyTrigger,
+        promptSurveyTrigger,
       );
       if (createPromptTrigger.error) {
         return { error: createPromptTrigger.error };
       }
 
-      RemoveSurveyTrigger.event.channel_ids = channelIds;
+      removeSurveyTrigger.event.channel_ids = channelIds;
       const createRemoveTrigger = await client.workflows.triggers.create(
-        RemoveSurveyTrigger,
+        removeSurveyTrigger,
       );
       if (createRemoveTrigger.error) {
         return { error: createRemoveTrigger.error };
@@ -73,18 +73,18 @@ export default SlackFunction(
       // Update existing event triggers otherwise
       triggers.forEach(async (t) => {
         if (t.event_type === "slack#/events/reaction_added") {
-          PromptSurveyTrigger.event.channel_ids = channelIds;
+          promptSurveyTrigger.event.channel_ids = channelIds;
           const updatePromptTrigger = await client.workflows.triggers
-            .update({ trigger_id: t.id, ...PromptSurveyTrigger });
+            .update({ trigger_id: t.id, ...promptSurveyTrigger });
           if (updatePromptTrigger.error) {
             return { error: updatePromptTrigger.error };
           }
         }
 
         if (t.event_type === "slack#/events/reaction_removed") {
-          RemoveSurveyTrigger.event.channel_ids = channelIds;
+          removeSurveyTrigger.event.channel_ids = channelIds;
           const updateRemoveTrigger = await client.workflows.triggers
-            .update({ trigger_id: t.id, ...RemoveSurveyTrigger });
+            .update({ trigger_id: t.id, ...removeSurveyTrigger });
           if (updateRemoveTrigger.error) {
             return { error: updateRemoveTrigger.error };
           }

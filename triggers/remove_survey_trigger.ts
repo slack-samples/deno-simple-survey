@@ -1,7 +1,7 @@
 import { Trigger } from "deno-slack-api/types.ts";
 import RemoveSurveyWorkflow from "../workflows/remove_survey.ts";
 
-const RemoveSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
+const removeSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
   type: "event",
   name: "Survey reacji removed",
   description: "Remove a survey from thread by removing the reacji",
@@ -21,4 +21,4 @@ const RemoveSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
   },
 };
 
-export default RemoveSurveyTrigger;
+export default removeSurveyTrigger;

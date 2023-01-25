@@ -1,7 +1,7 @@
 import { Trigger } from "deno-slack-api/types.ts";
 import MaintenanceJobWorkflow from "../workflows/maintenance_job.ts";
 
-const MaintenanceJobTrigger: Trigger<typeof MaintenanceJobWorkflow.definition> =
+const maintenanceJobTrigger: Trigger<typeof MaintenanceJobWorkflow.definition> =
   {
     type: "scheduled",
     name: "Trigger a scheduled maintenance job",
@@ -15,4 +15,4 @@ const MaintenanceJobTrigger: Trigger<typeof MaintenanceJobWorkflow.definition> =
     },
   };
 
-export default MaintenanceJobTrigger;
+export default maintenanceJobTrigger;
