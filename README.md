@@ -30,6 +30,11 @@ being stored in a dynamically created Google Sheet.
 - **Respond to a survey**: Open the feedback form and store responses in the
   spreadsheet.
 - **Remove a survey**: Delete messages with survey related link triggers.
+- **Channel configurator**: Update the channels where reaction events are
+  listened for.
+- **Maintenance job**: A daily run workflow that ensures bot user membership in
+  channels specified for event reaction triggers. Recommended for
+  production-grade operations.
 
 ## Setup
 
@@ -143,20 +148,20 @@ that Shortcut URLs will be different across each workspace, as well as between
 the Workspace that you'd like to create the trigger in. Each Workspace has a
 development version (denoted by `(dev)`), as well as a deployed version.
 
-To create event triggers for the "Prompt survey creation" and "Remove a survey"
-workflows, run the following commands:
+To create a link trigger for the workflow that enables end-users to configure
+the channels with active event triggers, run the following command:
 
 ```zsh
-$ slack trigger create --trigger-def triggers/prompt_survey_trigger.ts
-$ slack trigger create --trigger-def triggers/remove_survey_trigger.ts
+$ slack trigger create --trigger-def triggers/configurator.ts
 ```
 
-After selecting a Workspace, these triggers will begin listening for
-`reaction_added` and `reaction_removed` events in their configured channels.
+After selecting a Workspace, the output provided will include the link trigger
+Shortcut URL. Copy and paste this URL into a channel as a message, or add it as
+a bookmark in a channel of the Workspace you selected.
 
-**Note: these events won't trip any workflows until the app is either running
-locally or deployed!** Read on to learn how to run your app locally and
-eventually deploy it to Slack hosting.
+**Note: this link won't run the workflow until the app is either running locally
+or deployed!** Read on to learn how to run your app locally and eventually
+deploy it to Slack hosting.
 
 ## Running Your Project Locally
 
@@ -173,7 +178,7 @@ Connected, awaiting events
 
 Once running, click the
 [previously created Shortcut URL](#create-a-link-trigger) associated with the
-`(dev)` version of your app. This should start the included sample workflow.
+`(dev)` version of your app to configure the channel list for reaction events.
 
 To stop running locally, press `<CTRL> + C` to end the process.
 
@@ -202,6 +207,19 @@ $ slack deploy
 After deploying, [create a new link trigger](#create-a-link-trigger) for the
 production version of your app (not appended with `(dev)`). Once the trigger is
 invoked, the workflow should run just as it did in when developing locally.
+
+Also, for production-grade operations, we highly recommend enabling the
+`maintenance_job.ts` workflow. This survey app requires the app's bot user to be
+a member of channels to listen for events. When you add a new channel in the
+configuration modal, the bot user automatically joins the channel. However,
+anyone can remove the bot user from the channels at any time. To get the bot
+user back again, running the daily maintenance job should be a good-enough
+solution. You can enable it by running the following command, which generates a
+scheduled trigger to run it daily:
+
+```
+$ slack trigger create --trigger-def triggers/daily_maintenance_job.ts
+```
 
 ### Viewing Activity Logs
 

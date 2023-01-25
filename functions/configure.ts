@@ -1,11 +1,8 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { SlackAPIClient } from "deno-slack-api/types.ts";
 
+import { findReactionTriggers } from "./internals/trigger_operations.ts";
 import PromptSurveyTrigger from "../triggers/prompt_survey_trigger.ts";
 import RemoveSurveyTrigger from "../triggers/remove_survey_trigger.ts";
-
-import PromptSurveyWorkflow from "../workflows/prompt_survey.ts";
-import RemoveSurveyWorkflow from "../workflows/remove_survey.ts";
 
 export const ConfiguratorFunctionDefinition = DefineFunction({
   callback_id: "configure",
@@ -29,7 +26,7 @@ export default SlackFunction(
     const { error, triggers } = await findReactionTriggers(client);
     if (error) return { error };
 
-    // Join all channels with active event triggers
+    // Union of all channels with active event triggers
     const channelIds = triggers != undefined
       ? [...new Set(...triggers.map((t) => t.channel_ids))] as string[]
       : [];
@@ -117,31 +114,6 @@ export default SlackFunction(
 // ---------------------------
 // Internal functions
 // ---------------------------
-
-async function findReactionTriggers(client: SlackAPIClient) {
-  // Collect all existing triggers created by the app
-  const allTriggers = await client.workflows.triggers.list({ is_owner: true });
-  if (!allTriggers.ok) {
-    return {
-      error: `Failed to collect trigger information: ${allTriggers.error}`,
-    };
-  }
-
-  // Find reaction event triggers to update
-  const triggersToUpdate = allTriggers.triggers.filter((trigger) =>
-    (
-      trigger.workflow.callback_id ===
-        PromptSurveyWorkflow.definition.callback_id &&
-      trigger.event_type === "slack#/events/reaction_added"
-    ) || (
-      trigger.workflow.callback_id ===
-        RemoveSurveyWorkflow.definition.callback_id &&
-      trigger.event_type === "slack#/events/reaction_removed"
-    )
-  );
-
-  return { triggers: triggersToUpdate };
-}
 
 function buildModalView(channelIds: string[]) {
   return {

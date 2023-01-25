@@ -3,7 +3,7 @@ import { ConfiguratorFunctionDefinition } from "../functions/configure.ts";
 
 const ConfiguratorWorkflow = DefineWorkflow({
   callback_id: "configurator",
-  title: "Configure Simple Survey channels",
+  title: "Channel configurator",
   description: "Update the channels where reaction events are listened for",
   input_parameters: {
     properties: {

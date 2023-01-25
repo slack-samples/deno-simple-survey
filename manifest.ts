@@ -4,6 +4,8 @@ import GoogleProvider from "./external_auth/google_provider.ts";
 import SurveyDatastore from "./datastores/survey_datastore.ts";
 
 import ConfiguratorWorkflow from "./workflows/configurator.ts";
+import MaintenanceJobWorkflow from "./workflows/maintenance_job.ts";
+
 import AnswerSurveyWorkflow from "./workflows/answer_survey.ts";
 import CreateSurveyWorkflow from "./workflows/create_survey.ts";
 import RemoveSurveyWorkflow from "./workflows/remove_survey.ts";
@@ -17,6 +19,7 @@ export default Manifest({
   datastores: [SurveyDatastore],
   workflows: [
     ConfiguratorWorkflow,
+    MaintenanceJobWorkflow,
     AnswerSurveyWorkflow,
     CreateSurveyWorkflow,
     PromptSurveyWorkflow,
