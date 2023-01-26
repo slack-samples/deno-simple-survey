@@ -4,9 +4,7 @@ This app demonstrates multi-stage workflows for requesting and collecting
 feedback on messages, all starting at the press of a reaction, with responses
 being stored in a dynamically created Google Sheet.
 
-
 https://user-images.githubusercontent.com/18134219/214735934-7c40ee56-62b9-450f-81fa-cb501f9da000.mov
-
 
 **Guide Outline**:
 
@@ -186,11 +184,14 @@ Once running, click the
 
 To stop running locally, press `<CTRL> + C` to end the process.
 
-When you click the link trigger URL in Slack, you can configure the channel list as below:
+When you click the link trigger URL in Slack, you can configure the channel list
+as below:
 
 ![configurator](https://user-images.githubusercontent.com/18134219/214737822-35b1059c-16c1-4f23-b1c9-0343e114d900.gif)
 
-Once the surveyor is added to a channel, adding a `:clipboard:` reaction to a message will begin the survey process by prompting the reactor through direct message!
+Once the surveyor is added to a channel, adding a `:clipboard:` reaction to a
+message will begin the survey process by prompting the reactor through direct
+message!
 
 ## Testing
 
