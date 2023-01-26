@@ -27,13 +27,14 @@ export default Manifest({
   ],
   outgoingDomains: ["sheets.googleapis.com"],
   botScopes: [
-    "commands",
+    "channels:join",
     "chat:write",
     "chat:write.public",
+    "commands",
+    "datastore:read",
+    "datastore:write",
     "reactions:read",
     "triggers:read",
     "triggers:write",
-    "datastore:read",
-    "datastore:write",
   ],
 });
