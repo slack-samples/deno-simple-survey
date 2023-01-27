@@ -2,6 +2,7 @@ import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
 import SurveyDatastore, {
   SurveyDatastoreSchema,
 } from "../datastores/survey_datastore.ts";
+import { DataMapper } from "deno-slack-data-mapper/mod.ts";
 
 export const SaveSurveyFunctionDefinition = DefineFunction({
   callback_id: "save_survey",
@@ -30,16 +31,14 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     const uuid = crypto.randomUUID();
 
-    // Create or update the survey metadata
-    const putResponse = await client.apps.datastore.put<
-      typeof SurveyDatastore.definition
-    >({
-      datastore: "survey_datastore",
-      item: { id: uuid, ...inputs }, // `uuid` is overwritten by the optional `inputs.id`
+    const mapper = new DataMapper<typeof SurveyDatastore.definition>({
+      datastore: SurveyDatastore.definition,
+      client,
     });
 
-    if (!putResponse.ok) {
-      return { error: `Failed to save survey info: ${putResponse.error}` };
+    const creation = await mapper.save({ attributes: { id: uuid, ...inputs } });
+    if (!creation.ok) {
+      return { error: `Failed to save survey info: ${creation.error}` };
     }
     return { outputs: {} };
   },

@@ -2,6 +2,7 @@ import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
 import SurveyDatastore, {
   SurveyDatastoreSchema,
 } from "../datastores/survey_datastore.ts";
+import { DataMapper } from "deno-slack-data-mapper/mod.ts";
 
 export const RemoveThreadTriggerFunctionDefintion = DefineFunction({
   callback_id: "remove_thread_trigger",
@@ -27,30 +28,21 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     const { channel_id, parent_ts, reactor_id } = inputs;
 
-    // Gather information associated with the survey
-    const SurveyResponse = await client.apps.datastore.query<
-      typeof SurveyDatastore.definition
-    >({
-      datastore: SurveyDatastore.name,
-      expression:
-        "#channel_id = :channel_id AND #parent_ts = :parent_ts AND #reactor_id = :reactor_id",
-      expression_attributes: {
-        "#channel_id": "channel_id",
-        "#parent_ts": "parent_ts",
-        "#reactor_id": "reactor_id",
-      },
-      expression_values: {
-        ":channel_id": channel_id,
-        ":parent_ts": parent_ts,
-        ":reactor_id": reactor_id,
-      },
+    const mapper = new DataMapper<typeof SurveyDatastore.definition>({
+      datastore: SurveyDatastore.definition,
+      client,
     });
 
-    if (!SurveyResponse.ok) {
-      return { error: `Failed to save survey info: ${SurveyResponse.error}` };
+    // Gather information associated with the survey
+    const SurveyThread = await mapper.findAllBy({
+      where: { and: [{ channel_id, parent_ts, reactor_id }] },
+    });
+
+    if (!SurveyThread.ok) {
+      return { error: `Failed to lookup survey info: ${SurveyThread.error}` };
     }
 
-    SurveyResponse.items.forEach(async (survey) => {
+    SurveyThread.items.forEach(async (survey) => {
       // Delete message containing prompt link trigger
       if (survey.survey_stage === "PROMPT") {
         const deletePromptMessage = await client.chat.delete({
@@ -93,11 +85,7 @@ export default SlackFunction(
       }
 
       // Remove datastore entry for survey metadata
-      const deleteSurvey = await client.apps.datastore.delete({
-        datastore: SurveyDatastore.name,
-        id: survey.id,
-      });
-
+      const deleteSurvey = await mapper.deleteById({ id: survey.id });
       if (!deleteSurvey.ok) {
         return {
           error: `Failed to delete survey metadata: ${deleteSurvey.error}`,
