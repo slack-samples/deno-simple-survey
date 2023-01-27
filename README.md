@@ -4,7 +4,7 @@ This app demonstrates multi-stage workflows for requesting and collecting
 feedback on messages, all starting at the press of a reaction, with responses
 being stored in a dynamically created Google Sheet.
 
-https://user-images.githubusercontent.com/18134219/214735934-7c40ee56-62b9-450f-81fa-cb501f9da000.mov
+https://user-images.githubusercontent.com/18134219/214910427-c174e277-795b-455a-b351-56c37fb97b26.mp4
 
 **Guide Outline**:
 
