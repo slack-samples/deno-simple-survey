@@ -39,10 +39,11 @@ export const SurveyDatastoreSchema: Record<string, DatastoreAttribute> = {
   },
 };
 
+// Add a required property to all elements of the datastore
 const RequiredSurveyDatastoreSchema: Record<string, DatastoreAttribute> = {};
-for (const k in SurveyDatastoreSchema) {
-  RequiredSurveyDatastoreSchema[k] = {
-    ...SurveyDatastoreSchema[k],
+for (const key in SurveyDatastoreSchema) {
+  RequiredSurveyDatastoreSchema[key] = {
+    ...SurveyDatastoreSchema[key],
     required: true,
   };
 }
