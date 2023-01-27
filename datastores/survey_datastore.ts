@@ -1,6 +1,13 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 
-export const SurveyDatastoreSchema = {
+interface DatastoreAttribute {
+  type: string;
+  description?: string;
+  enum?: string[];
+  required?: boolean;
+}
+
+export const SurveyDatastoreSchema: Record<string, DatastoreAttribute> = {
   id: {
     type: Schema.types.string,
     description: "Datastore record id of the survey",
@@ -32,8 +39,16 @@ export const SurveyDatastoreSchema = {
   },
 };
 
+const RequiredSurveyDatastoreSchema: Record<string, DatastoreAttribute> = {};
+for (const k in SurveyDatastoreSchema) {
+  RequiredSurveyDatastoreSchema[k] = {
+    ...SurveyDatastoreSchema[k],
+    required: true,
+  };
+}
+
 export default DefineDatastore({
   name: "survey_datastore",
   primary_key: "id",
-  attributes: SurveyDatastoreSchema,
+  attributes: RequiredSurveyDatastoreSchema,
 });
