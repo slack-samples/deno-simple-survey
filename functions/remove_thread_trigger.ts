@@ -47,7 +47,7 @@ export default SlackFunction(
     });
 
     if (!SurveyResponse.ok) {
-      return { error: `Failed to save survey info: ${SurveyResponse.error}` };
+      return { error: `Failed to lookup survey info: ${SurveyResponse.error}` };
     }
 
     SurveyResponse.items.forEach(async (survey) => {
