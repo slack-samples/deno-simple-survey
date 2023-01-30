@@ -1,5 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { ConfiguratorFunctionDefinition } from "../functions/configure.ts";
+import { ConfigureChannelsFunctionDefinition } from "../functions/configure_channels.ts";
 
 const ConfiguratorWorkflow = DefineWorkflow({
   callback_id: "configurator",
@@ -14,7 +14,7 @@ const ConfiguratorWorkflow = DefineWorkflow({
 });
 
 // Step 1: Prompt for channel configuration
-ConfiguratorWorkflow.addStep(ConfiguratorFunctionDefinition, {
+ConfiguratorWorkflow.addStep(ConfigureChannelsFunctionDefinition, {
   interactivityPointer:
     ConfiguratorWorkflow.inputs.interactivity.interactivity_pointer,
 });

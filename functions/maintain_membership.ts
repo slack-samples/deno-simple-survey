@@ -1,5 +1,5 @@
 import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { findReactionTriggers } from "./internals/trigger_operations.ts";
+import { findReactionTriggers } from "./utils/trigger_operations.ts";
 
 export const MaintainMembershipFunctionDefinition = DefineFunction({
   callback_id: "maintain_membership",
