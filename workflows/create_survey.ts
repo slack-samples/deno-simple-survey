@@ -5,6 +5,12 @@ import { CreateTriggerFunctionDefinition } from "../functions/create_survey_trig
 import { SaveSurveyFunctionDefinition } from "../functions/save_survey.ts";
 import { RemoveThreadTriggerFunctionDefintion } from "../functions/remove_thread_trigger.ts";
 
+/**
+ * Workflows can also interweave the outputs from one step to
+ * the inputs of another, compounding custom and built-in functions
+ * to create connected processes.
+ * https://api.slack.com/future/workflows#workflow-custom-functions
+ */
 const CreateSurveyWorkflow = DefineWorkflow({
   callback_id: "create_survey",
   title: "Create a survey",

@@ -1,6 +1,14 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { SaveResponseFunctionDefinition } from "../functions/save_response.ts";
 
+/**
+ * A workflow is a set of steps that are executed in order.
+ * Each step in a workflow is a function.
+ * https://api.slack.com/future/workflows
+ *
+ * This workflow uses interactivity. Learn more at:
+ * https://api.slack.com/future/forms#add-interactivity
+ */
 const AnswerSurveyWorkflow = DefineWorkflow({
   callback_id: "answer_survey",
   title: "Respond to a survey",
@@ -24,6 +32,12 @@ const AnswerSurveyWorkflow = DefineWorkflow({
     ],
   },
 });
+
+/**
+ * For collecting input from users, we recommend the
+ * built-in OpenForm function as a first step.
+ * https://api.slack.com/future/functions#open-a-form
+ */
 
 // Step 1: Collect feedback in a form
 const response = AnswerSurveyWorkflow.addStep(
