@@ -34,10 +34,7 @@ export const SaveResponseFunctionDefinition = DefineFunction({
       "comments",
     ],
   },
-  output_parameters: {
-    properties: {},
-    required: [],
-  },
+  output_parameters: { properties: {}, required: [] },
 });
 
 export default SlackFunction(

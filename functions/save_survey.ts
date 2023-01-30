@@ -19,10 +19,7 @@ export const SaveSurveyFunctionDefinition = DefineFunction({
       "survey_stage",
     ],
   },
-  output_parameters: {
-    properties: {},
-    required: [],
-  },
+  output_parameters: { properties: {}, required: [] },
 });
 
 export default SlackFunction(

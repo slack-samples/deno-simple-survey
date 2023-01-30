@@ -16,10 +16,7 @@ export const RemoveThreadTriggerFunctionDefintion = DefineFunction({
       "reactor_id",
     ],
   },
-  output_parameters: {
-    properties: {},
-    required: [],
-  },
+  output_parameters: { properties: {}, required: [] },
 });
 
 export default SlackFunction(
