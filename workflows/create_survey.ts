@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 
-import { CreateSheetFunctionDefinition } from "../functions/create_sheet.ts";
+import { CreateGoogleSheetFunctionDefinition } from "../functions/create_google_sheet.ts";
 import { CreateTriggerFunctionDefinition } from "../functions/create_survey_trigger.ts";
 import { SaveSurveyFunctionDefinition } from "../functions/save_survey.ts";
 import { RemoveThreadTriggerFunctionDefintion } from "../functions/remove_thread_trigger.ts";
@@ -33,10 +33,13 @@ const CreateSurveyWorkflow = DefineWorkflow({
 });
 
 // Step 1: Create a new Google spreadsheet
-const sheet = CreateSurveyWorkflow.addStep(CreateSheetFunctionDefinition, {
-  google_access_token_id: { credential_source: "END_USER" },
-  title: CreateSurveyWorkflow.inputs.parent_ts,
-});
+const sheet = CreateSurveyWorkflow.addStep(
+  CreateGoogleSheetFunctionDefinition,
+  {
+    google_access_token_id: { credential_source: "END_USER" },
+    title: CreateSurveyWorkflow.inputs.parent_ts,
+  },
+);
 
 // Step 2: Create a link trigger for the survey
 const trigger = CreateSurveyWorkflow.addStep(CreateTriggerFunctionDefinition, {
