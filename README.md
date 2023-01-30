@@ -15,7 +15,6 @@ https://user-images.githubusercontent.com/18134219/214910427-c174e277-795b-455a-
   - [Prepare your Google Services](#prepare-your-google-services)
 - [Create a Link Trigger](#create-a-link-trigger)
 - [Running Your Project Locally](#running-your-project-locally)
-- [Testing](#testing)
 - [Deploying Your App](#deploying-your-app)
   - [Viewing Activity Logs](#viewing-activity-logs)
 - [Project Structure](#project-structure)
@@ -192,19 +191,6 @@ as below:
 Once the surveyor is added to a channel, adding a `:clipboard:` reaction to a
 message will begin the survey process by prompting the reactor through direct
 message!
-
-## Testing
-
-<!-- TODO -->
-
-For an example of how to test a function, see `functions/save_hours_test.ts`.
-Test filenames should be suffixed with `_test`.
-
-Run all tests with `deno test`:
-
-```zsh
-$ deno test
-```
 
 ## Deploying Your App
 
