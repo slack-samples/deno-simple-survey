@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreatePromptTriggerFunctionDefinition } from "../functions/create_prompt_trigger.ts";
-import { GetMessageLinkFunctionDefinition } from "../functions/get_message_link.ts";
+import { GetMessagePermalinkFunctionDefinition } from "../functions/get_message_permalink.ts";
 import { SaveSurveyFunctionDefinition } from "../functions/save_survey.ts";
 
 const PromptSurveyWorkflow = DefineWorkflow({
@@ -28,7 +28,7 @@ const PromptSurveyWorkflow = DefineWorkflow({
 
 // Step 1: Collect the URL of the reacted message
 const parentPermalink = PromptSurveyWorkflow.addStep(
-  GetMessageLinkFunctionDefinition,
+  GetMessagePermalinkFunctionDefinition,
   {
     channel_id: PromptSurveyWorkflow.inputs.channel_id,
     parent_ts: PromptSurveyWorkflow.inputs.parent_ts,

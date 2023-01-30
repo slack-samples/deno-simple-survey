@@ -1,10 +1,10 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 
-export const GetMessageLinkFunctionDefinition = DefineFunction({
-  callback_id: "get_message_link",
+export const GetMessagePermalinkFunctionDefinition = DefineFunction({
+  callback_id: "get_message_permalink",
   title: "Get message permalink",
   description: "Collect the URL of a message",
-  source_file: "functions/get_message_link.ts",
+  source_file: "functions/get_message_permalink.ts",
   input_parameters: {
     properties: {
       channel_id: {
@@ -30,7 +30,7 @@ export const GetMessageLinkFunctionDefinition = DefineFunction({
 });
 
 export default SlackFunction(
-  GetMessageLinkFunctionDefinition,
+  GetMessagePermalinkFunctionDefinition,
   async ({ inputs, client }) => {
     const message = await client.chat.getPermalink({
       channel: inputs.channel_id,
