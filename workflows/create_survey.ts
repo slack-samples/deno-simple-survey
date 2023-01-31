@@ -42,7 +42,7 @@ const CreateSurveyWorkflow = DefineWorkflow({
 const sheet = CreateSurveyWorkflow.addStep(
   CreateGoogleSheetFunctionDefinition,
   {
-    google_access_token_id: { credential_source: "END_USER" },
+    google_access_token_id: {},
     title: CreateSurveyWorkflow.inputs.parent_ts,
   },
 );
