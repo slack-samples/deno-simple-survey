@@ -4,6 +4,7 @@ This app demonstrates multi-stage workflows for requesting and collecting
 feedback on messages, all starting at the press of a reaction, with responses
 being stored in a dynamically created Google Sheet.
 
+<!-- TODO: update -->
 https://user-images.githubusercontent.com/18134219/214910427-c174e277-795b-455a-b351-56c37fb97b26.mp4
 
 **Guide Outline**:
@@ -31,8 +32,8 @@ https://user-images.githubusercontent.com/18134219/214910427-c174e277-795b-455a-
 - **Respond to a survey**: Open the feedback form and store responses in the
   spreadsheet.
 - **Remove a survey**: Delete messages with survey related link triggers.
-- **Channel configurator**: Update the channels where reaction events are
-  listened for.
+- **Event configurator**: Update the channels to survey and surveying users for
+  reaction events.
 - **Maintenance job**: A daily run workflow that ensures bot user membership in
   channels specified for event reaction triggers. Recommended for
   production-grade operations.
@@ -100,8 +101,12 @@ Take your client ID and add it as the value for `client_id` in
 `external_auth/google_provider.ts` – the custom OAuth2 provider definition for
 your Google project.
 
-Once complete, use `slack run` or `slack deploy` to update your local or hosted
-app.
+Once complete, update your local or hosted app with slack run or slack deploy to
+create an environment for storing your external authentication client secret and
+access token.
+
+> :warning️: Running these commands will warn you that a client secret must be
+> added for your OAuth2 provider. We'll take care of this in the next step!
 
 #### Save your Client Secret
 
@@ -127,6 +132,10 @@ Google account you want to authenticate with:
 ```sh
 $ slack external-auth add
 ```
+
+> :unlock: Spreadsheets generated as part of the **Create a survey** workflow
+> will be created from the acount you authenticate with! To limit the users that
+> can create surveys, an **Event configurator** workflow is used.
 
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!
@@ -184,13 +193,14 @@ Once running, click the
 To stop running locally, press `<CTRL> + C` to end the process.
 
 When you click the link trigger URL in Slack, you can configure the channel list
-as below:
+and surveying users as shown below:
 
+<!-- TODO: update -->
 ![configurator](https://user-images.githubusercontent.com/18134219/214737822-35b1059c-16c1-4f23-b1c9-0343e114d900.gif)
 
-Once the surveyor is added to a channel, adding a `:clipboard:` reaction to a
-message will begin the survey process by prompting the reactor through direct
-message!
+Once the surveyor is added to the channel, configured users that add a
+`:clipboard:` reaction to a message will begin the survey process with a prompt
+to create a new survey!
 
 ## Deploying Your App
 

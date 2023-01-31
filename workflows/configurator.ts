@@ -6,8 +6,9 @@ import { ConfigureEventsFunctionDefinition } from "../functions/configure_events
  */
 const ConfiguratorWorkflow = DefineWorkflow({
   callback_id: "configurator",
-  title: "Channel configurator",
-  description: "Update the channels where reaction events are listened for",
+  title: "Event configurator",
+  description:
+    "Update the channels to survey and surveying users for reaction events",
   input_parameters: {
     properties: {
       interactivity: { type: Schema.slack.types.interactivity },
