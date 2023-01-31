@@ -53,7 +53,21 @@ const trigger = CreateSurveyWorkflow.addStep(CreateTriggerFunctionDefinition, {
   reactor_access_token_id: sheet.outputs.reactor_access_token_id,
 });
 
-// Step 3: Send the survey into the reacted thread
+// Step 3: Delete the prompt message and metadata
+CreateSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefintion, {
+  channel_id: CreateSurveyWorkflow.inputs.channel_id,
+  parent_ts: CreateSurveyWorkflow.inputs.parent_ts,
+  reactor_id: CreateSurveyWorkflow.inputs.reactor_id,
+});
+
+// Step 4: Notify the reactor of the survey spreadsheet
+CreateSurveyWorkflow.addStep(Schema.slack.functions.SendDm, {
+  user_id: CreateSurveyWorkflow.inputs.reactor_id,
+  message:
+    `Feedback for <${CreateSurveyWorkflow.inputs.parent_url}|this message> is being <${sheet.outputs.google_spreadsheet_url}|collected here>!`,
+});
+
+// Step 5: Send the survey into the reacted thread
 const message = CreateSurveyWorkflow.addStep(
   Schema.slack.functions.SendMessage,
   {
@@ -63,20 +77,6 @@ const message = CreateSurveyWorkflow.addStep(
       `Your feedback is requested – <${trigger.outputs.trigger_url}|survey now>!`,
   },
 );
-
-// Step 4: Delete the prompt message and metadata
-CreateSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefintion, {
-  channel_id: CreateSurveyWorkflow.inputs.channel_id,
-  parent_ts: CreateSurveyWorkflow.inputs.parent_ts,
-  reactor_id: CreateSurveyWorkflow.inputs.reactor_id,
-});
-
-// Step 5: Notify the reactor of the survey spreadsheet
-CreateSurveyWorkflow.addStep(Schema.slack.functions.SendDm, {
-  user_id: CreateSurveyWorkflow.inputs.reactor_id,
-  message:
-    `Feedback for <${CreateSurveyWorkflow.inputs.parent_url}|this message> is being <${sheet.outputs.google_spreadsheet_url}|collected here>!`,
-});
 
 // Step 6: Store new survey metadata
 CreateSurveyWorkflow.addStep(SaveSurveyFunctionDefinition, {
