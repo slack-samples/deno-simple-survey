@@ -3,6 +3,8 @@ import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import {
   createReactionTriggers,
   findReactionTriggers,
+  getReactionTriggerChannelIds,
+  getReactionTriggerSurveyorIds,
   updateReactionTriggers,
 } from "./utils/trigger_operations.ts";
 
@@ -13,10 +15,10 @@ import {
  * https://api.slack.com/future/functions/custom
  */
 
-export const ConfigureChannelsFunctionDefinition = DefineFunction({
-  callback_id: "configure_channels",
-  title: "Manage channels for the reaction event triggers",
-  source_file: "functions/configure_channels.ts",
+export const ConfigureEventsFunctionDefinition = DefineFunction({
+  callback_id: "configure_events",
+  title: "Manage channel and user filters for the reaction event triggers",
+  source_file: "functions/configure_events.ts",
   input_parameters: {
     properties: {
       interactivityPointer: { type: Schema.types.string },
@@ -27,20 +29,24 @@ export const ConfigureChannelsFunctionDefinition = DefineFunction({
 });
 
 export default SlackFunction(
-  ConfigureChannelsFunctionDefinition,
+  ConfigureEventsFunctionDefinition,
   async ({ inputs, client }) => {
     const { error, triggers } = await findReactionTriggers(client);
     if (error) return { error };
 
-    // Union of all channels with active event triggers
+    // Retreive existing channel and surveyor info
     const channelIds = triggers != undefined
-      ? [...new Set(...triggers.map((t) => t.channel_ids))] as string[]
+      ? getReactionTriggerChannelIds(triggers)
+      : [];
+
+    const surveyorIds = triggers != undefined
+      ? getReactionTriggerSurveyorIds(triggers)
       : [];
 
     // Open the modal to configure the channel list for the workflows
     const response = await client.views.open({
       interactivity_pointer: inputs.interactivityPointer,
-      view: buildModalView(channelIds),
+      view: buildModalView(channelIds, surveyorIds),
     });
     if (!response.ok) {
       return { error: `Failed to open configurator modal: ${response.error}` };
@@ -56,9 +62,14 @@ export default SlackFunction(
    * https://api.slack.com/future/view-events
    */
 
-  const channelIds = view.state.values.block.channels
+  // Gather input from the modal
+  const channelIds = view.state.values.channel_block.channels
     .selected_channels as string[];
+  const reactorIds = view.state.values.user_block.users
+    .selected_users as string[];
+  const filters = { channelIds, reactorIds };
 
+  // Search for existing reaction triggers
   const { error, triggers } = await findReactionTriggers(client);
   if (error) {
     return { error: `Failed to collect trigger information: ${error}` };
@@ -66,12 +77,12 @@ export default SlackFunction(
 
   // Create new event reaction triggers or update existing ones
   if (triggers === undefined || triggers.length === 0) {
-    const { error } = await createReactionTriggers(client, channelIds);
+    const { error } = await createReactionTriggers(client, filters);
     if (error) {
       return { error: `Failed to create new event triggers: ${error}` };
     }
   } else {
-    const { error } = updateReactionTriggers(client, triggers, channelIds);
+    const { error } = updateReactionTriggers(client, triggers, filters);
     if (error) {
       return { error: `Failed to update existing event triggers: ${error}` };
     }
@@ -99,7 +110,7 @@ export default SlackFunction(
 // Internal functions
 // ---------------------------
 
-function buildModalView(channelIds: string[]) {
+function buildModalView(channelIds: string[], surveyorIds: string[]) {
   return {
     "type": "modal",
     "callback_id": "configure-workflow",
@@ -115,12 +126,12 @@ function buildModalView(channelIds: string[]) {
     "blocks": [
       {
         "type": "input",
-        "block_id": "block",
+        "block_id": "channel_block",
         "element": {
           "type": "multi_channels_select",
           "placeholder": {
             "type": "plain_text",
-            "text": "Select channels to add",
+            "text": "Select channels to survey in",
           },
           "initial_channels": channelIds,
           "action_id": "channels",
@@ -129,6 +140,33 @@ function buildModalView(channelIds: string[]) {
           "type": "plain_text",
           "text": "Channels to survey",
         },
+      },
+      {
+        "type": "input",
+        "block_id": "user_block",
+        "element": {
+          "type": "multi_users_select",
+          "placeholder": {
+            "type": "plain_text",
+            "text": "Select users that can create surveys",
+          },
+          "initial_users": surveyorIds,
+          "action_id": "users",
+        },
+        "label": {
+          "type": "plain_text",
+          "text": "Surveying users",
+        },
+      },
+      {
+        "type": "context",
+        "elements": [
+          {
+            "type": "plain_text",
+            "text":
+              "Spreadsheets will be created using the external auth tokens added from the CLI",
+          },
+        ],
       },
     ],
   };

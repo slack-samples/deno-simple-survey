@@ -17,7 +17,16 @@ const promptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
     channel_ids: [""], // Channel IDs are added by the configurator workflow
     filter: {
       version: 1,
-      root: { statement: "{{data.reaction}} == clipboard" },
+      root: {
+        operator: "AND",
+        inputs: [{
+          statement: "{{data.reaction}} == clipboard",
+        }, {
+          // User IDs are configured by the configurator workflow
+          operator: "OR",
+          inputs: [{ statement: "{{data.user_id}} == USLACKBOT" }],
+        }],
+      },
     },
   },
   inputs: {
