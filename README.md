@@ -5,6 +5,7 @@ feedback on messages, all starting at the press of a reaction, with responses
 being stored in a dynamically created Google Sheet.
 
 <!-- TODO: update -->
+
 https://user-images.githubusercontent.com/18134219/214910427-c174e277-795b-455a-b351-56c37fb97b26.mp4
 
 **Guide Outline**:
@@ -196,6 +197,7 @@ When you click the link trigger URL in Slack, you can configure the channel list
 and surveying users as shown below:
 
 <!-- TODO: update -->
+
 ![configurator](https://user-images.githubusercontent.com/18134219/214737822-35b1059c-16c1-4f23-b1c9-0343e114d900.gif)
 
 Once the surveyor is added to the channel, configured users that add a
