@@ -47,8 +47,9 @@ const promptTrigger = PromptSurveyWorkflow.addStep(
 
 // Step 3: Prompt the reactor for survey creation
 const promptMessage = PromptSurveyWorkflow.addStep(
-  Schema.slack.functions.SendDm,
+  Schema.slack.functions.SendEphemeralMessage,
   {
+    channel_id: PromptSurveyWorkflow.inputs.channel_id,
     user_id: PromptSurveyWorkflow.inputs.reactor_id,
     message:
       `Would you like to <${promptTrigger.outputs.prompt_url}|create a new survey> for <${parentPermalink.outputs.permalink}|this message>?`,
