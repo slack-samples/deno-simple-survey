@@ -1,23 +1,41 @@
-# Deno Starter Template
+# Deno Simple Survey App
 
-This is a scaffolded Deno template used to build out Slack apps using the Slack
-CLI.
+This app demonstrates multi-stage workflows for requesting and collecting
+feedback on messages, all starting at the press of a reaction, with responses
+being stored in a dynamically created Google Sheet.
+
+https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-bce0-aae174289948.mp4
 
 **Guide Outline**:
 
+- [Supported Workflows](#supported-workflows)
 - [Setup](#setup)
   - [Install the Slack CLI](#install-the-slack-cli)
-  - [Clone the Template](#clone-the-template)
+  - [Clone the Sample App](#clone-the-sample-app)
+  - [Prepare your Google Services](#prepare-your-google-services)
 - [Create a Link Trigger](#create-a-link-trigger)
 - [Running Your Project Locally](#running-your-project-locally)
-- [Datastores](#datastores)
-- [Testing](#testing)
 - [Deploying Your App](#deploying-your-app)
   - [Viewing Activity Logs](#viewing-activity-logs)
 - [Project Structure](#project-structure)
 - [Resources](#resources)
 
 ---
+
+## Supported Workflows
+
+- **Prompt survey creation**: Ask if a user wants to create a survey when a
+  :clipboard: reaction is added to a message.
+- **Create a survey**: Respond to the reacted message with a feedback form and
+  make a new spreadsheet to store responses.
+- **Respond to a survey**: Open the feedback form and store responses in the
+  spreadsheet.
+- **Remove a survey**: Delete messages with survey related link triggers.
+- **Event configurator**: Update the channels to survey and surveying users for
+  reaction events.
+- **Maintenance job**: A daily run workflow that ensures bot user membership in
+  channels specified for event reaction triggers. Recommended for
+  production-grade operations.
 
 ## Setup
 
@@ -28,21 +46,98 @@ requires any of [the Slack paid plans](https://slack.com/pricing).
 
 ### Install the Slack CLI
 
-To use this template, you first need to install and configure the Slack CLI.
+To use this sample, you first need to install and configure the Slack CLI.
 Step-by-step instructions can be found in our
 [Quickstart Guide](https://api.slack.com/future/quickstart).
 
-### Clone the Template
+### Clone the Sample App
 
 Start by cloning this repository:
 
 ```zsh
 # Clone this project onto your machine
-$ slack create my-app -t slack-samples/deno-starter-template
+$ slack create my-app -t slack-samples/deno-simple-survey
 
 # Change into this project directory
 $ cd my-app
 ```
+
+### Prepare your Google Services
+
+With [external authentication](https://api.slack.com/future/external-auth) you
+can programmatically interact with Google services and APIs from your app, as
+though you're the authorized user.
+
+The client credentials needed for these interactions can be collected from a
+Google Cloud project with OAuth enabled and with access to the appropriate
+services.
+
+#### Create a Google Cloud Project
+
+Begin by creating a new project from
+[the Google Cloud resource manager](https://console.cloud.google.com/cloud-resource-manager),
+then
+[enabling the Google Sheets API](https://console.cloud.google.com/apis/library/sheets.googleapis.com)
+for this project.
+
+Next,
+[create an OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
+for your app. The "User Type" and other required app information can be
+configured as you wish. No additional scopes need to be added here, and you can
+add test users for development if you want.
+
+Client credentials can be collected by
+[creating an OAuth client ID](https://console.cloud.google.com/apis/credentials/oauthclient)
+with an application type of "Web application". Under the "Authorized redirect
+URIs" section, add `https://oauth2.slack.com/external/auth/callback` then click
+"Create".
+
+You'll use these newly created client credentials in the next steps.
+
+#### Set your Client ID
+
+Take your client ID and add it as the value for `client_id` in
+`external_auth/google_provider.ts` – the custom OAuth2 provider definition for
+your Google project.
+
+Once complete, update your local or hosted app with slack run or slack deploy to
+create an environment for storing your external authentication client secret and
+access token.
+
+> :warning: Running these commands will warn you that a client secret must be
+> added for your OAuth2 provider. We'll take care of this in the next step!
+
+#### Save your Client Secret
+
+With your client secret ready, run the following command, replacing
+`GOOGLE_CLIENT_SECRET` with your own secret:
+
+```sh
+$ slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
+```
+
+When prompted to select an app, choose the `(dev)` app only if you're running
+the app locally.
+
+#### Initiate the OAuth2 Flow
+
+With your Google project created and the Client ID and secret set, you're ready
+to initate the OAuth flow!
+
+If all the right values are in place, the following command will prompt you to
+choose an app, select a provider (hint: choose the `google` one), then pick the
+Google account you want to authenticate with:
+
+```sh
+$ slack external-auth add
+```
+
+> :unlock: Spreadsheets generated as part of the **Create a survey** workflow
+> will be created from the acount you authenticate with! To limit the users that
+> can create surveys, an **Event configurator** workflow is used.
+
+Once you've successfully connected your account, you're almost ready to create
+surveys at the press of a reaction!
 
 ## Create a Link Trigger
 
@@ -62,11 +157,11 @@ that Shortcut URLs will be different across each workspace, as well as between
 the Workspace that you'd like to create the trigger in. Each Workspace has a
 development version (denoted by `(dev)`), as well as a deployed version.
 
-To create a link trigger for the workflow in this template, run the following
-command:
+To create a link trigger for the workflow that enables end-users to configure
+the channels with active event triggers, run the following command:
 
 ```zsh
-$ slack trigger create --trigger-def triggers/sample_trigger.ts
+$ slack trigger create --trigger-def triggers/configurator.ts
 ```
 
 After selecting a Workspace, the output provided will include the link trigger
@@ -92,28 +187,18 @@ Connected, awaiting events
 
 Once running, click the
 [previously created Shortcut URL](#create-a-link-trigger) associated with the
-`(dev)` version of your app. This should start the included sample workflow.
+`(dev)` version of your app to configure the channel list for reaction events.
 
 To stop running locally, press `<CTRL> + C` to end the process.
 
-## Datastores
+When you click the link trigger URL in Slack, you can configure the channel list
+and surveying users as shown below:
 
-If your app needs to store any data, a datastore would be the right place for
-that. For an example of a datastore, see `datastores/sample_datastore.ts`. Using
-a datastore also requires the `datastore:write`/`datastore:read` scopes to be
-present in your manifest.
+<img src="https://user-images.githubusercontent.com/18134219/215911063-e3ab2892-1644-4f63-9383-f37be2954172.gif" width="600">
 
-## Testing
-
-For an example of how to test a function, see
-`functions/sample_function_test.ts`. Test filenames should be suffixed with
-`_test`.
-
-Run all tests with `deno test`:
-
-```zsh
-$ deno test
-```
+Once the surveyor is added to the channel, configured users that add a
+`:clipboard:` reaction to a message will begin the survey process with a prompt
+to create a new survey!
 
 ## Deploying Your App
 
@@ -127,6 +212,19 @@ $ slack deploy
 After deploying, [create a new link trigger](#create-a-link-trigger) for the
 production version of your app (not appended with `(dev)`). Once the trigger is
 invoked, the workflow should run just as it did in when developing locally.
+
+Also, for production-grade operations, we highly recommend enabling the
+`maintenance_job.ts` workflow. This survey app requires the app's bot user to be
+a member of channels to listen for events. When you add a new channel in the
+configuration modal, the bot user automatically joins the channel. However,
+anyone can remove the bot user from the channels at any time. To get the bot
+user back again, running the daily maintenance job should be a good-enough
+solution. You can enable it by running the following command, which generates a
+scheduled trigger to run it daily:
+
+```
+$ slack trigger create --trigger-def triggers/daily_maintenance_job.ts
+```
 
 ### Viewing Activity Logs
 
@@ -175,6 +273,12 @@ such as a user pressing a button or when a specific event occurs.
 [Datastores](https://api.slack.com/future/datastores) can securely store and
 retrieve data for your application. Required scopes to use datastores include
 `datastore:write` and `datastore:read`.
+
+### `/external_auth`
+
+[External authentication](https://api.slack.com/future/external-auth) connects
+your app to external services using OAuth2. Once connected, you can perform
+actions as the authorized user on these services from a custom function.
 
 ## Resources
 

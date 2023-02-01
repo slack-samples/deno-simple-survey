@@ -1,24 +1,40 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-import SampleWorkflow from "./workflows/sample_workflow.ts";
-import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 
-/**
- * The app manifest contains the app's configuration. This
- * file defines attributes like app name and description.
- * https://api.slack.com/future/manifest
- */
+import GoogleProvider from "./external_auth/google_provider.ts";
+import SurveyDatastore from "./datastores/survey_datastore.ts";
+
+import ConfiguratorWorkflow from "./workflows/configurator.ts";
+import MaintenanceJobWorkflow from "./workflows/maintenance_job.ts";
+
+import AnswerSurveyWorkflow from "./workflows/answer_survey.ts";
+import CreateSurveyWorkflow from "./workflows/create_survey.ts";
+import RemoveSurveyWorkflow from "./workflows/remove_survey.ts";
+import PromptSurveyWorkflow from "./workflows/prompt_survey.ts";
+
 export default Manifest({
-  name: "deno-starter-template",
-  description: "A template for building Slack apps with Deno",
+  name: "Simple Survey",
+  description: "Gather input and ideas at the press of a reacji",
   icon: "assets/default_new_app_icon.png",
-  workflows: [SampleWorkflow],
-  outgoingDomains: [],
-  datastores: [SampleObjectDatastore],
+  externalAuthProviders: [GoogleProvider],
+  datastores: [SurveyDatastore],
+  workflows: [
+    ConfiguratorWorkflow,
+    MaintenanceJobWorkflow,
+    AnswerSurveyWorkflow,
+    CreateSurveyWorkflow,
+    PromptSurveyWorkflow,
+    RemoveSurveyWorkflow,
+  ],
+  outgoingDomains: ["sheets.googleapis.com"],
   botScopes: [
-    "commands",
+    "channels:join",
     "chat:write",
     "chat:write.public",
+    "commands",
     "datastore:read",
     "datastore:write",
+    "reactions:read",
+    "triggers:read",
+    "triggers:write",
   ],
 });
