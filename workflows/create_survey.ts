@@ -69,10 +69,12 @@ CreateSurveyWorkflow.addStep(Schema.slack.functions.SendDm, {
 
 // Step 5: Send the survey into the reacted thread
 const message = CreateSurveyWorkflow.addStep(
-  Schema.slack.functions.SendMessage,
+  Schema.slack.functions.ReplyInThread,
   {
-    channel_id: CreateSurveyWorkflow.inputs.channel_id,
-    thread_ts: CreateSurveyWorkflow.inputs.parent_ts,
+    message_context: {
+      message_ts: CreateSurveyWorkflow.inputs.parent_ts,
+      channel_id: CreateSurveyWorkflow.inputs.channel_id,
+    },
     message:
       `Your feedback is requested – <${trigger.outputs.trigger_url}|survey now>!`,
   },
@@ -83,7 +85,7 @@ CreateSurveyWorkflow.addStep(SaveSurveyFunctionDefinition, {
   channel_id: CreateSurveyWorkflow.inputs.channel_id,
   parent_ts: CreateSurveyWorkflow.inputs.parent_ts,
   reactor_id: CreateSurveyWorkflow.inputs.reactor_id,
-  trigger_ts: message.outputs.message_ts,
+  trigger_ts: message.outputs.message_context.message_ts,
   trigger_id: trigger.outputs.trigger_id,
   survey_stage: "SURVEY",
 });
