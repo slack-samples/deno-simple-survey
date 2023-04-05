@@ -1,4 +1,4 @@
-import { SlackAPIClient } from "deno-slack-api/types.ts";
+import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { EventTriggerResponseObject } from "deno-slack-api/typed-method-types/workflows/triggers/event.ts";
 
 import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
