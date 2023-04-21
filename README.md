@@ -8,17 +8,30 @@ https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-
 
 **Guide Outline**:
 
-- [Supported Workflows](#supported-workflows)
-- [Setup](#setup)
-  - [Install the Slack CLI](#install-the-slack-cli)
-  - [Clone the Sample App](#clone-the-sample-app)
-  - [Prepare your Google Services](#prepare-your-google-services)
-- [Create a Link Trigger](#create-a-link-trigger)
-- [Running Your Project Locally](#running-your-project-locally)
-- [Deploying Your App](#deploying-your-app)
-  - [Viewing Activity Logs](#viewing-activity-logs)
-- [Project Structure](#project-structure)
-- [Resources](#resources)
+- [Deno Simple Survey App](#deno-simple-survey-app)
+  - [Supported Workflows](#supported-workflows)
+  - [Setup](#setup)
+    - [Install the Slack CLI](#install-the-slack-cli)
+    - [Clone the Sample App](#clone-the-sample-app)
+    - [Prepare your Google Services](#prepare-your-google-services)
+      - [Create a Google Cloud Project](#create-a-google-cloud-project)
+      - [Set your Client ID](#set-your-client-id)
+      - [Install your app](#install-your-app)
+      - [Save your Client Secret](#save-your-client-secret)
+      - [Initiate the OAuth2 Flow](#initiate-the-oauth2-flow)
+  - [Create a Link Trigger](#create-a-link-trigger)
+  - [Running Your Project Locally](#running-your-project-locally)
+  - [Deploying Your App](#deploying-your-app)
+    - [Viewing Activity Logs](#viewing-activity-logs)
+  - [Project Structure](#project-structure)
+    - [`manifest.ts`](#manifestts)
+    - [`slack.json`](#slackjson)
+    - [`/functions`](#functions)
+    - [`/workflows`](#workflows)
+    - [`/triggers`](#triggers)
+    - [`/datastores`](#datastores)
+    - [`/external_auth`](#external_auth)
+  - [Resources](#resources)
 
 ---
 
@@ -107,29 +120,37 @@ access token.
 > :warning: Running these commands will warn you that a client secret must be
 > added for your OAuth2 provider. We'll take care of this in the next step!
 
+#### Install your app
+
+Install your app to a workspace you are logged into.
+
+```zsh
+slack install
+```
+
 #### Save your Client Secret
 
 With your client secret ready, run the following command, replacing
 `GOOGLE_CLIENT_SECRET` with your own secret:
 
 ```sh
-$ slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
+slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
 ```
 
-When prompted to select an app, choose the `(dev)` app only if you're running
+When prompted to select an app, choose the `(local)` app only if you're running
 the app locally.
 
 #### Initiate the OAuth2 Flow
 
 With your Google project created and the Client ID and secret set, you're ready
-to initate the OAuth flow!
+to initiate the OAuth flow!
 
 If all the right values are in place, the following command will prompt you to
 choose an app, select a provider (hint: choose the `google` one), then pick the
 Google account you want to authenticate with:
 
 ```sh
-$ slack external-auth add
+slack external-auth add
 ```
 
 > :unlock: Spreadsheets generated as part of the **Create a survey** workflow
@@ -155,13 +176,13 @@ that Shortcut URLs will be different across each workspace, as well as between
 [locally run](#running-your-project-locally) and
 [deployed apps](#deploying-your-app). When creating a trigger, you must select
 the Workspace that you'd like to create the trigger in. Each Workspace has a
-development version (denoted by `(dev)`), as well as a deployed version.
+development version (denoted by `(local)`), as well as a deployed version.
 
 To create a link trigger for the workflow that enables end-users to configure
 the channels with active event triggers, run the following command:
 
 ```zsh
-$ slack trigger create --trigger-def triggers/configurator.ts
+slack trigger create --trigger-def triggers/configurator.ts
 ```
 
 After selecting a Workspace, the output provided will include the link trigger
@@ -176,7 +197,7 @@ deploy it to Slack hosting.
 
 While building your app, you can see your changes propagated to your workspace
 in real-time with `slack run`. In both the CLI and in Slack, you'll know an app
-is the development version if the name has the string `(dev)` appended.
+is the development version if the name has the string `(local)` appended.
 
 ```zsh
 # Run app locally
@@ -187,7 +208,7 @@ Connected, awaiting events
 
 Once running, click the
 [previously created Shortcut URL](#create-a-link-trigger) associated with the
-`(dev)` version of your app to configure the channel list for reaction events.
+`(local)` version of your app to configure the channel list for reaction events.
 
 To stop running locally, press `<CTRL> + C` to end the process.
 
@@ -206,11 +227,11 @@ Once you're done with development, you can deploy the production version of your
 app to Slack hosting using `slack deploy`:
 
 ```zsh
-$ slack deploy
+slack deploy
 ```
 
 After deploying, [create a new link trigger](#create-a-link-trigger) for the
-production version of your app (not appended with `(dev)`). Once the trigger is
+production version of your app (not appended with `(local)`). Once the trigger is
 invoked, the workflow should run just as it did in when developing locally.
 
 Also, for production-grade operations, we highly recommend enabling the
@@ -222,8 +243,8 @@ user back again, running the daily maintenance job should be a good-enough
 solution. You can enable it by running the following command, which generates a
 scheduled trigger to run it daily:
 
-```
-$ slack trigger create --trigger-def triggers/daily_maintenance_job.ts
+```zsh
+slack trigger create --trigger-def triggers/daily_maintenance_job.ts
 ```
 
 ### Viewing Activity Logs
@@ -232,7 +253,7 @@ Activity logs for the production instance of your application can be viewed with
 the `slack activity` command:
 
 ```zsh
-$ slack activity
+slack activity
 ```
 
 ## Project Structure
