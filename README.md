@@ -191,7 +191,15 @@ Interacting with this link will run the associated workflow.
 **Note: triggers won't run the workflow unless the app is either running locally
 or deployed!**
 
-#### Using the Configurator Trigger
+### Manual Trigger Creation
+
+To manually create a trigger, use the following command:
+
+```zsh
+$ slack trigger create --trigger-def triggers/configurator.ts
+```
+
+### Using the Configurator Trigger
 
 With the configurator link trigger (`triggers/configurator.ts`) you can
 configure the channel list and surveying users, as shown below:
@@ -201,14 +209,6 @@ configure the channel list and surveying users, as shown below:
 Once the app is added to the channel being surveyed, configured users that add a
 `:clipboard:` reaction to a message will begin the survey process with a prompt
 to create a new survey.
-
-### Manual Trigger Creation
-
-To manually create a trigger, use the following command:
-
-```zsh
-$ slack trigger create --trigger-def triggers/configurator.ts
-```
 
 ## Datastores
 
@@ -243,15 +243,16 @@ developing locally (but without requiring your server to be running).
 
 ### Production Maintenance Job
 
-For production, we recommend also enabling the `maintenance_job.ts` workflow.
+For production, we recommend enabling the included `maintenance_job.ts`
+workflow.
+
 The app's bot user must be a member of a channel in order to listen for events
 there. When you add a new channel in the configuration modal, the bot user
 automatically joins the channel. **However, anyone can remove the bot user from
-the channels at any time.** To get the bot user back again, run the included
-daily maintenance job.
+the channel at any time.**
 
-To enable this job, run the following command, which generates a scheduled
-trigger to run daily:
+To enable a job that will re-add the bot user to channel, run the following
+command that generates a scheduled trigger to run daily:
 
 ```zsh
 $ slack trigger create --trigger-def triggers/daily_maintenance_job.ts
