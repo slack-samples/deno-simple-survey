@@ -1,5 +1,5 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
-import PromptSurveyWorkflow from "../workflows/prompt_survey.ts";
+import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
 
 /**
  * Event triggers automatically invoke a workflow when a specific event
