@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-
     - [Prepare your Google Services](#prepare-your-google-services)
       - [Create a Google Cloud Project](#create-a-google-cloud-project)
       - [Set your Client ID](#set-your-client-id)
-      - [Validate the app starts](#validate-the-app-starts)
+      - [Validate your app](#validate-your-app)
       - [Save your Client Secret](#save-your-client-secret)
       - [Initiate the OAuth2 Flow](#initiate-the-oauth2-flow)
   - [Create a Link Trigger](#create-a-link-trigger)
@@ -109,20 +109,26 @@ You'll use these newly created client credentials in the next steps.
 
 #### Set your Client ID
 
-Take your client ID and add it as the value for `client_id` in
-`external_auth/google_provider.ts` – the custom OAuth2 provider definition for
-your Google project.
+Create a file named `.env` at the top level of this project. Copy the contents
+of `.env.example` into your new `.env` file. Take your client ID and set it as
+the value for `GOOGLE_CLIENT_ID` in your new `.env` file. This value will be
+used in `external_auth/google_provider.ts` – the custom OAuth2 provider
+definition for your Google project.
 
-Once complete, update your local or hosted app with slack run or slack deploy to
-create an environment for storing your external authentication client secret and
-access token.
+#### Validate your app
 
-> :warning: Running these commands will warn you that a client secret must be
-> added for your OAuth2 provider. We'll take care of this in the next step!
+At this point you should be able to start your project. Go ahead and execute the
+following command to see if your app works properly.
 
-#### Validate the app starts
+When prompted install the app to your workspace and create the
+`triggers/configurator.ts` trigger
 
-select triggers/configurator.ts
+```zsh
+slack run
+```
+
+Once complete, press `<CTRL> + C` to end the process. You will need to create
+additional secrets before using your project.
 
 #### Save your Client Secret
 
