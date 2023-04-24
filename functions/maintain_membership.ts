@@ -1,5 +1,9 @@
 import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { findReactionTriggers } from "./utils/trigger_operations.ts";
+import {
+  findReactionTriggers,
+  ReactionTriggerResponseObject,
+} from "./utils/trigger_operations.ts";
+import { isTriggerOperationError } from "./utils/errors.ts";
 
 export const MaintainMembershipFunctionDefinition = DefineFunction({
   callback_id: "maintain_membership",
@@ -12,13 +16,19 @@ export const MaintainMembershipFunctionDefinition = DefineFunction({
 export default SlackFunction(
   MaintainMembershipFunctionDefinition,
   async ({ client }) => {
-    const { error, triggers } = await findReactionTriggers(client);
-    if (error) return { error };
+    // Search for existing reaction triggers
+    let triggers: ReactionTriggerResponseObject[] = [];
+    try {
+      triggers = await findReactionTriggers(client);
+    } catch (err) {
+      if (isTriggerOperationError(err)) {
+        console.log(err);
+        return { error: `${err.error}` };
+      }
+    }
 
     // Union of all channels with active event triggers
-    const channelIds = triggers != undefined
-      ? [...new Set(...triggers.map((t) => t.channel_ids))] as string[]
-      : [];
+    const channelIds = [...new Set(...triggers.map((t) => t.channel_ids))];
 
     // Join all channels as the bot user
     channelIds.forEach(async (channel) => {

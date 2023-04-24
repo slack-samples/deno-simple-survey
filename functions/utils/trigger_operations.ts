@@ -6,6 +6,7 @@ import RemoveSurveyWorkflow from "../../workflows/remove_survey.ts";
 
 import promptSurveyTrigger from "../triggers/prompt_survey_trigger.ts";
 import removeSurveyTrigger from "../triggers/remove_survey_trigger.ts";
+import { TriggerOperationError } from "../errors/mods.ts";
 
 /**
  * The /utils directory exports commonly shared or abstracted
@@ -23,11 +24,14 @@ export type ReactionTriggerResponseObject = EventTriggerResponseObject<
  */
 export async function findReactionTriggers(
   client: SlackAPIClient,
-): Promise<{ error?: string; triggers?: ReactionTriggerResponseObject[] }> {
+): Promise<ReactionTriggerResponseObject[]> {
   // Collect all existing triggers created by the app
   const allTriggers = await client.workflows.triggers.list({ is_owner: true });
   if (!allTriggers.ok) {
-    return { error: allTriggers.error };
+    throw new TriggerOperationError(
+      allTriggers.error,
+      `Failed to list all triggers!`,
+    );
   }
 
   // Find reaction event triggers to update
@@ -43,7 +47,7 @@ export async function findReactionTriggers(
     )
   );
 
-  return { triggers: triggersToUpdate as ReactionTriggerResponseObject[] };
+  return triggersToUpdate as ReactionTriggerResponseObject[];
 }
 
 /**
@@ -53,7 +57,7 @@ export async function findReactionTriggers(
 export async function createReactionTriggers(
   client: SlackAPIClient,
   filters: { channelIds: string[]; reactorIds: string[] },
-): Promise<{ error?: string }> {
+) {
   const { channelIds, reactorIds } = filters;
   const reactorFilter = reactorIds.map((id) => {
     return { statement: `{{data.user_id}} == ${id}` };
@@ -65,7 +69,10 @@ export async function createReactionTriggers(
     promptSurveyTrigger,
   );
   if (!createPromptTrigger.ok) {
-    return { error: createPromptTrigger.error };
+    throw new TriggerOperationError(
+      createPromptTrigger.error,
+      `Failed to create createPromptTrigger: ${removeSurveyTrigger}`,
+    );
   }
 
   removeSurveyTrigger.event.channel_ids = channelIds;
@@ -74,10 +81,11 @@ export async function createReactionTriggers(
     removeSurveyTrigger,
   );
   if (!createRemoveTrigger.ok) {
-    return { error: createRemoveTrigger.error };
+    throw new TriggerOperationError(
+      createRemoveTrigger.error,
+      `Failed to create removeSurveyTrigger: ${removeSurveyTrigger}`,
+    );
   }
-
-  return {};
 }
 
 /**
@@ -88,7 +96,7 @@ export function updateReactionTriggers(
   client: SlackAPIClient,
   triggers: ReactionTriggerResponseObject[],
   filters: { channelIds: string[]; reactorIds: string[] },
-): { error?: string } {
+) {
   const { channelIds, reactorIds } = filters;
   const reactorFilter = reactorIds.map((id) => {
     return { statement: `{{data.user_id}} == ${id}` };
@@ -101,7 +109,10 @@ export function updateReactionTriggers(
       const updatePromptTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...promptSurveyTrigger });
       if (!updatePromptTrigger.ok) {
-        return { error: updatePromptTrigger.error };
+        throw new TriggerOperationError(
+          updatePromptTrigger.error,
+          `failed to update PromptTrigger: ${trigger.id}`,
+        );
       }
     }
 
@@ -111,12 +122,13 @@ export function updateReactionTriggers(
       const updateRemoveTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...removeSurveyTrigger });
       if (!updateRemoveTrigger.ok) {
-        return { error: updateRemoveTrigger.error };
+        throw new TriggerOperationError(
+          updateRemoveTrigger.error,
+          `failed to update RemoveTrigger: ${trigger.id}`,
+        );
       }
     }
   });
-
-  return {};
 }
 
 /**

@@ -5,8 +5,10 @@ import {
   findReactionTriggers,
   getReactionTriggerChannelIds,
   getReactionTriggerSurveyorIds,
+  ReactionTriggerResponseObject,
   updateReactionTriggers,
 } from "./utils/trigger_operations.ts";
+import { isTriggerOperationError } from "./utils/errors.ts";
 
 /**
  * Custom funcitons are the building blocks of workflows:
@@ -31,17 +33,20 @@ export const ConfigureEventsFunctionDefinition = DefineFunction({
 export default SlackFunction(
   ConfigureEventsFunctionDefinition,
   async ({ inputs, client }) => {
-    const { error, triggers } = await findReactionTriggers(client);
-    if (error) return { error };
+    // Search for existing reaction triggers
+    let triggers: ReactionTriggerResponseObject[] = [];
+    try {
+      triggers = await findReactionTriggers(client);
+    } catch (err) {
+      if (isTriggerOperationError(err)) {
+        console.error(err);
+        return { error: `${err.error}` };
+      }
+    }
 
     // Retreive existing channel and surveyor info
-    const channelIds = triggers != undefined
-      ? getReactionTriggerChannelIds(triggers)
-      : [];
-
-    const surveyorIds = triggers != undefined
-      ? getReactionTriggerSurveyorIds(triggers)
-      : [];
+    const channelIds = getReactionTriggerChannelIds(triggers);
+    const surveyorIds = getReactionTriggerSurveyorIds(triggers);
 
     // Open the modal to configure the channel list for the workflows
     const viewOpenResponse = await client.views.open({
@@ -71,23 +76,21 @@ export default SlackFunction(
     .selected_users as string[];
   const filters = { channelIds, reactorIds };
 
-  // Search for existing reaction triggers
-  const { error, triggers } = await findReactionTriggers(client);
-  if (error) {
-    return { error: `Failed to collect trigger information: ${error}` };
-  }
+  let triggers: ReactionTriggerResponseObject[] = [];
 
-  // Create new event reaction triggers or update existing ones
-  if (triggers === undefined || triggers.length === 0) {
-    const { error } = await createReactionTriggers(client, filters);
-    if (error) {
-      return { error: `Failed to create new event triggers: ${error}` };
+  try {
+    // Search for existing reaction triggers
+    triggers = await findReactionTriggers(client);
+
+    // Create new event reaction triggers or update existing ones
+    if (triggers.length === 0) {
+      await createReactionTriggers(client, filters);
+    } else {
+      updateReactionTriggers(client, triggers, filters);
     }
-  } else {
-    const { error } = updateReactionTriggers(client, triggers, filters);
-    if (error) {
-      return { error: `Failed to update existing event triggers: ${error}` };
-    }
+  } catch (err) {
+    console.error(err);
+    return { error: `${err.error}` };
   }
 
   // Join all selected channels as the bot user
