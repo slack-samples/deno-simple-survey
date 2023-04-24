@@ -50,17 +50,19 @@ export default SlackFunction(
   CreateGoogleSheetFunctionDefinition,
   async ({ inputs, client }) => {
     // Collect Google access token
-    const auth = await client.apiCall("apps.auth.external.get", {
+    const auth = await client.apps.auth.external.get({
       external_token_id: inputs.google_access_token_id,
     });
 
     if (!auth.ok) {
-      return { error: `Failed to collect Google auth token: ${auth.error}` };
+      return {
+        error: `Failed to collect Google auth token: ${auth.error}`,
+      };
     }
 
     // Create spreadsheet
     const url = "https://sheets.googleapis.com/v4/spreadsheets";
-    const sheets = await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${auth.external_token}`,
@@ -82,17 +84,18 @@ export default SlackFunction(
       }),
     });
 
-    const body = await sheets.json();
-    if (body.error) {
+    const sheets = await response.json();
+    if (sheets.error) {
       return {
-        error: `Failed to create the survey spreadsheet: ${body.error.message}`,
+        error:
+          `Failed to create the survey spreadsheet: ${sheets.error.message}`,
       };
     }
 
     return {
       outputs: {
-        google_spreadsheet_id: body.spreadsheetId,
-        google_spreadsheet_url: body.spreadsheetUrl,
+        google_spreadsheet_id: sheets.spreadsheetId,
+        google_spreadsheet_url: sheets.spreadsheetUrl,
         reactor_access_token_id: inputs.google_access_token_id,
       },
     };

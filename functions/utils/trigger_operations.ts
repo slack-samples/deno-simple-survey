@@ -64,7 +64,7 @@ export async function createReactionTriggers(
   const createPromptTrigger = await client.workflows.triggers.create(
     promptSurveyTrigger,
   );
-  if (createPromptTrigger.error) {
+  if (!createPromptTrigger.ok) {
     return { error: createPromptTrigger.error };
   }
 
@@ -73,7 +73,7 @@ export async function createReactionTriggers(
   const createRemoveTrigger = await client.workflows.triggers.create(
     removeSurveyTrigger,
   );
-  if (createRemoveTrigger.error) {
+  if (!createRemoveTrigger.ok) {
     return { error: createRemoveTrigger.error };
   }
 
@@ -100,7 +100,7 @@ export function updateReactionTriggers(
       promptSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
       const updatePromptTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...promptSurveyTrigger });
-      if (updatePromptTrigger.error) {
+      if (!updatePromptTrigger.ok) {
         return { error: updatePromptTrigger.error };
       }
     }
@@ -110,7 +110,7 @@ export function updateReactionTriggers(
       removeSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
       const updateRemoveTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...removeSurveyTrigger });
-      if (updateRemoveTrigger.error) {
+      if (!updateRemoveTrigger.ok) {
         return { error: updateRemoveTrigger.error };
       }
     }

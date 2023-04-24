@@ -31,7 +31,7 @@ export default SlackFunction(
     const putResponse = await client.apps.datastore.put<
       typeof SurveyDatastore.definition
     >({
-      datastore: "survey_datastore",
+      datastore: SurveyDatastore.name,
       item: { id: uuid, ...inputs }, // `uuid` is overwritten by the optional `inputs.id`
     });
 

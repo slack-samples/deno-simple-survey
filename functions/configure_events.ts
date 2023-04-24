@@ -44,12 +44,14 @@ export default SlackFunction(
       : [];
 
     // Open the modal to configure the channel list for the workflows
-    const response = await client.views.open({
+    const viewOpenResponse = await client.views.open({
       interactivity_pointer: inputs.interactivityPointer,
       view: buildModalView(channelIds, surveyorIds),
     });
-    if (!response.ok) {
-      return { error: `Failed to open configurator modal: ${response.error}` };
+    if (!viewOpenResponse.ok) {
+      return {
+        error: `Failed to open configurator modal: ${viewOpenResponse.error}`,
+      };
     }
 
     // Set this to continue the interaction with this user
@@ -90,10 +92,10 @@ export default SlackFunction(
 
   // Join all selected channels as the bot user
   channelIds.forEach(async (channel) => {
-    const response = await client.conversations.join({ channel });
-    if (!response.ok) {
+    const joinResponse = await client.conversations.join({ channel });
+    if (!joinResponse.ok) {
       return {
-        error: `Failed to join channel <#${channel}>: ${response.error}`,
+        error: `Failed to join channel <#${channel}>: ${joinResponse.error}`,
       };
     }
   });

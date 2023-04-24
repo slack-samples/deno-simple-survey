@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-
     - [Prepare your Google Services](#prepare-your-google-services)
       - [Create a Google Cloud Project](#create-a-google-cloud-project)
       - [Set your Client ID](#set-your-client-id)
-      - [Install your app](#install-your-app)
+      - [Validate the app starts](#validate-the-app-starts)
       - [Save your Client Secret](#save-your-client-secret)
       - [Initiate the OAuth2 Flow](#initiate-the-oauth2-flow)
   - [Create a Link Trigger](#create-a-link-trigger)
@@ -120,13 +120,9 @@ access token.
 > :warning: Running these commands will warn you that a client secret must be
 > added for your OAuth2 provider. We'll take care of this in the next step!
 
-#### Install your app
+#### Validate the app starts
 
-Install your app to a workspace you are logged into.
-
-```zsh
-slack install
-```
+select triggers/configurator.ts
 
 #### Save your Client Secret
 
@@ -231,8 +227,8 @@ slack deploy
 ```
 
 After deploying, [create a new link trigger](#create-a-link-trigger) for the
-production version of your app (not appended with `(local)`). Once the trigger is
-invoked, the workflow should run just as it did in when developing locally.
+production version of your app (not appended with `(local)`). Once the trigger
+is invoked, the workflow should run just as it did in when developing locally.
 
 Also, for production-grade operations, we highly recommend enabling the
 `maintenance_job.ts` workflow. This survey app requires the app's bot user to be
