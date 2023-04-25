@@ -6,7 +6,7 @@ import RemoveSurveyWorkflow from "../../workflows/remove_survey.ts";
 
 import promptSurveyTrigger from "../triggers/prompt_survey_trigger.ts";
 import removeSurveyTrigger from "../triggers/remove_survey_trigger.ts";
-import { TriggerOperationError } from "../errors/mods.ts";
+import { TriggerOperationError } from "./errors.ts";
 
 /**
  * The /utils directory exports commonly shared or abstracted
