@@ -1,6 +1,7 @@
 import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
 import {
   findReactionTriggers,
+  getReactionTriggerChannelIds,
   ReactionTriggerResponseObject,
 } from "./utils/trigger_operations.ts";
 import { isTriggerOperationError } from "./utils/errors.ts";
@@ -28,7 +29,7 @@ export default SlackFunction(
     }
 
     // Union of all channels with active event triggers
-    const channelIds = [...new Set(...triggers.map((t) => t.channel_ids))];
+    const channelIds = getReactionTriggerChannelIds(triggers);
 
     // Join all channels as the bot user
     channelIds.forEach(async (channel) => {

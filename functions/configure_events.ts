@@ -11,7 +11,7 @@ import {
 import { isTriggerOperationError } from "./utils/errors.ts";
 
 /**
- * Custom funcitons are the building blocks of workflows:
+ * Custom functions are the building blocks of workflows:
  * accepting input, performing calculations, handling view events,
  * and providing output.
  * https://api.slack.com/future/functions/custom
@@ -44,7 +44,7 @@ export default SlackFunction(
       }
     }
 
-    // Retreive existing channel and surveyor info
+    // Retrieve existing channel and surveyor info
     const channelIds = getReactionTriggerChannelIds(triggers);
     const surveyorIds = getReactionTriggerSurveyorIds(triggers);
 
@@ -115,7 +115,7 @@ export default SlackFunction(
 // Internal functions
 // ---------------------------
 
-function buildModalView(channelIds: string[], surveyorIds: string[]) {
+function buildModalView(channelIds: Set<string>, surveyorIds: Set<string>) {
   return {
     "type": "modal",
     "callback_id": "configure-workflow",
@@ -138,7 +138,7 @@ function buildModalView(channelIds: string[], surveyorIds: string[]) {
             "type": "plain_text",
             "text": "Select channels to survey in",
           },
-          "initial_channels": channelIds,
+          "initial_channels": Array.from(channelIds),
           "action_id": "channels",
         },
         "label": {
@@ -155,7 +155,7 @@ function buildModalView(channelIds: string[], surveyorIds: string[]) {
             "type": "plain_text",
             "text": "Select users that can create surveys",
           },
-          "initial_users": surveyorIds,
+          "initial_users": Array.from(surveyorIds),
           "action_id": "users",
         },
         "label": {

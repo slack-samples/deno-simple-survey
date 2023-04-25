@@ -167,8 +167,8 @@ slack external-auth add
 ```
 
 > :unlock: Spreadsheets generated as part of the **Create a survey** workflow
-> will be created from the acount you authenticate with! To limit the users that
-> can create surveys, an **Event configurator** workflow is used.
+> will be created from the account you authenticate with! To limit the users
+> that can create surveys, an **Event configurator** workflow is used.
 
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!

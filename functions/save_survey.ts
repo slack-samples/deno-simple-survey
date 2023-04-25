@@ -25,14 +25,14 @@ export const SaveSurveyFunctionDefinition = DefineFunction({
 export default SlackFunction(
   SaveSurveyFunctionDefinition,
   async ({ inputs, client }) => {
-    const uuid = crypto.randomUUID();
+    const uuid = inputs.id ?? crypto.randomUUID();
 
     // Create or update the survey metadata
     const putResponse = await client.apps.datastore.put<
       typeof SurveyDatastore.definition
     >({
       datastore: SurveyDatastore.name,
-      item: { id: uuid, ...inputs }, // `uuid` is overwritten by the optional `inputs.id`
+      item: { id: uuid, ...inputs },
     });
 
     if (!putResponse.ok) {

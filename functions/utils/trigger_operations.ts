@@ -116,7 +116,8 @@ export function updateReactionTriggers(
       }
     }
 
-    if (trigger.event_type === "slack#/events/reaction_removed") {
+    removeSurveyTrigger.event.event_type;
+    if (trigger.event_type === removeSurveyTrigger.event.event_type) {
       removeSurveyTrigger.event.channel_ids = channelIds;
       removeSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
       const updateRemoveTrigger = await client.workflows.triggers
@@ -132,14 +133,12 @@ export function updateReactionTriggers(
 }
 
 /**
- * getReactionTriggerChannelIds returns all channel_ids with
- * active reaction event triggers
+ * getReactionTriggerChannelIds returns all channel_ids
  */
 export function getReactionTriggerChannelIds(
   triggers: ReactionTriggerResponseObject[],
-): string[] {
-  const channelIds = new Set(...triggers.map((t) => t.channel_ids));
-  return [...channelIds] as string[];
+): Set<string> {
+  return new Set(...triggers.map((t) => t.channel_ids));
 }
 
 /**
@@ -148,11 +147,9 @@ export function getReactionTriggerChannelIds(
  */
 export function getReactionTriggerSurveyorIds(
   triggers: ReactionTriggerResponseObject[],
-): string[] {
-  const surveyorIds = new Set(
+): Set<string> {
+  return new Set(
     triggers.flatMap((t) => t.filter.root.inputs[1].inputs)
       .map((filter) => filter.statement.split(" ").pop()),
   );
-
-  return [...surveyorIds] as string[];
 }

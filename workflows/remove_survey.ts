@@ -12,7 +12,7 @@ const RemoveSurveyWorkflow = DefineWorkflow({
         description: "The channel containing the un-reacted message",
       },
       parent_ts: {
-        type: Schema.types.string,
+        type: Schema.slack.types.message_ts,
         description: "Message timestamp of the un-reacted message",
       },
       reactor_id: {
