@@ -4,7 +4,7 @@ This app demonstrates multi-stage workflows for requesting and collecting
 feedback on messages, all starting at the press of a reaction, with responses
 being stored in a dynamically created Google Sheet.
 
-https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-bce0-aae174289948.mp4
+<https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-bce0-aae174289948.mp4>
 
 **Guide Outline**:
 
@@ -19,10 +19,10 @@ https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-
       - [Validate your app](#validate-your-app)
       - [Save your Client Secret](#save-your-client-secret)
       - [Initiate the OAuth2 Flow](#initiate-the-oauth2-flow)
-  - [Create a Link Trigger](#create-a-link-trigger)
   - [Running Your Project Locally](#running-your-project-locally)
   - [Deploying Your App](#deploying-your-app)
     - [Viewing Activity Logs](#viewing-activity-logs)
+  - [Link Trigger](#link-trigger)
   - [Project Structure](#project-structure)
     - [`manifest.ts`](#manifestts)
     - [`slack.json`](#slackjson)
@@ -109,26 +109,37 @@ You'll use these newly created client credentials in the next steps.
 
 #### Set your Client ID
 
-Create a file named `.env` at the top level of this project. Copy the contents
-of `.env.example` into your new `.env` file. Take your client ID and set it as
-the value for `GOOGLE_CLIENT_ID` in your new `.env` file. This value will be
-used in `external_auth/google_provider.ts` – the custom OAuth2 provider
-definition for your Google project.
+Create a file named `.env` at the top level of your project. Copy the contents
+of `.env.example` into your new `.env` file. Take your Client ID and set it as
+the value for `GOOGLE_CLIENT_ID` (replacing `12345-example`) in your new `.env`
+file. This value will be used in `external_auth/google_provider.ts` – the custom
+OAuth2 provider definition for your Google project.
+
+Note: this environment variable is used to set a value that configures your
+application and is not required at runtime, therefore you do **not** need to use
+the `slack env add` command for [deployed apps](#deploying-your-app).
 
 #### Validate your app
 
-At this point you should be able to start your project. Go ahead and execute the
-following command to see if your app works properly.
+At this point you should be able to build and start your project. Go ahead and
+execute the following command to see if your app works properly.
 
-When prompted install the app to your workspace and create the
-`triggers/configurator.ts` trigger
+When prompted:
+
+- install the app to your workspace
+- create the `triggers/configurator.ts` [trigger](#link-trigger).
 
 ```zsh
-slack run
+# Run app locally
+$ slack run
+
+Connected, awaiting events
 ```
 
+Note: Ignore warnings at this stage!
+
 Once complete, press `<CTRL> + C` to end the process. You will need to create
-additional secrets before using your project.
+additional secrets before using your application.
 
 #### Save your Client Secret
 
@@ -162,39 +173,6 @@ slack external-auth add
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!
 
-## Create a Link Trigger
-
-[Triggers](https://api.slack.com/future/triggers) are what cause workflows to
-run. These triggers can be invoked by a user, or automatically as a response to
-an event within Slack.
-
-A [link trigger](https://api.slack.com/future/triggers/link) is a type of
-trigger that generates a **Shortcut URL** which, when posted in a channel or
-added as a bookmark, becomes a link. When clicked, the link trigger will run the
-associated workflow.
-
-Link triggers are _unique to each installed version of your app_. This means
-that Shortcut URLs will be different across each workspace, as well as between
-[locally run](#running-your-project-locally) and
-[deployed apps](#deploying-your-app). When creating a trigger, you must select
-the Workspace that you'd like to create the trigger in. Each Workspace has a
-development version (denoted by `(local)`), as well as a deployed version.
-
-To create a link trigger for the workflow that enables end-users to configure
-the channels with active event triggers, run the following command:
-
-```zsh
-slack trigger create --trigger-def triggers/configurator.ts
-```
-
-After selecting a Workspace, the output provided will include the link trigger
-Shortcut URL. Copy and paste this URL into a channel as a message, or add it as
-a bookmark in a channel of the Workspace you selected.
-
-**Note: this link won't run the workflow until the app is either running locally
-or deployed!** Read on to learn how to run your app locally and eventually
-deploy it to Slack hosting.
-
 ## Running Your Project Locally
 
 While building your app, you can see your changes propagated to your workspace
@@ -208,9 +186,11 @@ $ slack run
 Connected, awaiting events
 ```
 
-Once running, click the
-[previously created Shortcut URL](#create-a-link-trigger) associated with the
-`(local)` version of your app to configure the channel list for reaction events.
+Once running, you should be able to see the trigger relevant to your app below
+`Listing triggers installed to the app...`. use the
+[previously created Simple Survey configurator shortcut](#validate-your-app)
+associated with the version of your app to configure the channel list for
+reaction events.
 
 To stop running locally, press `<CTRL> + C` to end the process.
 
@@ -232,9 +212,11 @@ app to Slack hosting using `slack deploy`:
 slack deploy
 ```
 
-After deploying, [create a new link trigger](#create-a-link-trigger) for the
-production version of your app (not appended with `(local)`). Once the trigger
-is invoked, the workflow should run just as it did in when developing locally.
+When prompted to choose a trigger definition file select
+`triggers/configurator.ts` this will create a link trigger for the workflow that
+enables end-users to configure the channels with active event triggers for your
+deployed application. Once the trigger is invoked, the workflow should run just
+as it did in when developing locally.
 
 Also, for production-grade operations, we highly recommend enabling the
 `maintenance_job.ts` workflow. This survey app requires the app's bot user to be
@@ -242,8 +224,17 @@ a member of channels to listen for events. When you add a new channel in the
 configuration modal, the bot user automatically joins the channel. However,
 anyone can remove the bot user from the channels at any time. To get the bot
 user back again, running the daily maintenance job should be a good-enough
-solution. You can enable it by running the following command, which generates a
-scheduled trigger to run it daily:
+solution. You can enable it by creating a scheduled trigger for the workflow
+that will to run it daily, with the following command and selecting
+`triggers/daily_maintenance_job.ts`:
+
+```zsh
+slack trigger create
+
+# Select triggers/daily_maintenance_job.ts when prompted
+```
+
+or
 
 ```zsh
 slack trigger create --trigger-def triggers/daily_maintenance_job.ts
@@ -257,6 +248,48 @@ the `slack activity` command:
 ```zsh
 slack activity
 ```
+
+## Link Trigger
+
+[Triggers](https://api.slack.com/future/triggers) are what cause workflows to
+run. These triggers can be invoked by a user, or automatically as a response to
+an event within Slack.
+
+A [link trigger](https://api.slack.com/future/triggers/link) is a type of
+trigger that generates a **Shortcut URL** which, when posted in a channel or
+added as a bookmark, becomes a link. When clicked, the link trigger will run the
+associated workflow.
+
+Link triggers are _unique to each installed version of your app_. This means
+that Shortcut URLs will be different across each workspace, as well as between
+[locally run](#running-your-project-locally) and
+[deployed apps](#deploying-your-app). When creating a trigger, you must select
+the Workspace that you'd like to create the trigger in. Each Workspace has a
+development version (denoted by `(local)`), as well as a deployed version.
+
+You should have already created a link trigger for the workflow that enables
+end-users to configure the channels with active event triggers, but if you did
+not you can create one by running the following command:
+
+```zsh
+slack trigger create
+
+# Select triggers/configurator.ts when prompted
+```
+
+or
+
+```zsh
+slack trigger create --trigger-def triggers/configurator.ts
+```
+
+After selecting a Workspace, the output provided will include the link trigger
+Shortcut URL. Copy and paste this URL into a channel as a message, or add it as
+a bookmark in a channel of the Workspace you selected.
+
+**Note: this link won't run the workflow until the app is either running locally
+or deployed!** Read on to learn how to run your app locally and eventually
+deploy it to Slack hosting.
 
 ## Project Structure
 
