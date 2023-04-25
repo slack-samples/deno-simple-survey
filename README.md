@@ -69,10 +69,10 @@ Start by cloning this repository:
 
 ```zsh
 # Clone this project onto your machine
-$ slack create my-app -t slack-samples/deno-simple-survey
+slack create my-app -t slack-samples/deno-simple-survey
 
 # Change into this project directory
-$ cd my-app
+cd my-app
 ```
 
 ### Prepare your Google Services
