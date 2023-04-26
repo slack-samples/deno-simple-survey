@@ -65,9 +65,9 @@ $ cd my-app
 
 ### Prepare Google Services
 
-With [external authentication](https://api.slack.com/automation/external-auth) you
-can programmatically interact with Google services and APIs from your app, as
-though you're the authorized user.
+With [external authentication](https://api.slack.com/automation/external-auth)
+you can programmatically interact with Google services and APIs from your app,
+as though you're the authorized user.
 
 The client credentials needed for these interactions can be collected from a
 Google Cloud project with OAuth enabled and with access to the appropriate
@@ -155,8 +155,8 @@ $ slack external-auth add
 ```
 
 > :unlock: Spreadsheets generated as part of the **Create a survey** workflow
-> will be created from the account you authenticate with! To limit the users that
-> can create surveys, an **Event configurator** workflow is used.
+> will be created from the account you authenticate with! To limit the users
+> that can create surveys, an **Event configurator** workflow is used.
 
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!
