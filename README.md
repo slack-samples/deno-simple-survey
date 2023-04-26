@@ -112,7 +112,7 @@ URIs" section, add `https://oauth2.slack.com/external/auth/callback` then click
 
 You'll use these newly created client credentials in the next steps.
 
-#### Set your Client ID
+#### Set the Client ID
 
 Create a file named `.env` at the top level of your project. Copy the contents
 of `.env.example` into your new `.env` file. Take your Client ID and set it as
