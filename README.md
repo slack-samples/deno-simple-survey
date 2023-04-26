@@ -107,7 +107,7 @@ Note: this environment variable is used to set a value that configures your
 application and is not required at runtime, therefore you do **not** need to use
 the `slack env add` command for [deployed apps](#deploying-your-app).
 
-#### Validate your app
+#### Validate Your App
 
 At this point you should be able to build and start your project. Go ahead and
 execute the following command to see if your app works properly.
