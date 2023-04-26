@@ -9,7 +9,7 @@ import { RemoveThreadTriggerFunctionDefinition } from "../functions/remove_threa
  * Workflows can also interweave the outputs from one step to
  * the inputs of another, compounding custom and built-in functions
  * to create connected processes.
- * https://api.slack.com/future/workflows#workflow-custom-functions
+ * https://api.slack.com/automation/workflows#workflow-custom-functions
  */
 const CreateSurveyWorkflow = DefineWorkflow({
   callback_id: "create_survey",

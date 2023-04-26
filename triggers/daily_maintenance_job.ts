@@ -4,7 +4,7 @@ import MaintenanceJobWorkflow from "../workflows/maintenance_job.ts";
 /**
  * Scheduled triggers are an automatic type of trigger that
  * do not require any user input and repeat on a given frequency.
- * https://api.slack.com/future/triggers/scheduled
+ * https://api.slack.com/automation/triggers/scheduled
  */
 const maintenanceJobTrigger: Trigger<typeof MaintenanceJobWorkflow.definition> =
   {

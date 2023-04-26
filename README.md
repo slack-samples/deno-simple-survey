@@ -65,7 +65,7 @@ $ cd my-app
 
 ### Prepare Google Services
 
-With [external authentication](https://api.slack.com/future/external-auth) you
+With [external authentication](https://api.slack.com/automation/external-auth) you
 can programmatically interact with Google services and APIs from your app, as
 though you're the authorized user.
 

@@ -3,7 +3,7 @@ import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 /**
  * Custom functions can gather OAuth access tokens from external
  * authentication to perform individualized actions on external APIs.
- * https://api.slack.com/future/external-auth
+ * https://api.slack.com/automation/external-auth
  */
 export const CreateGoogleSheetFunctionDefinition = DefineFunction({
   callback_id: "create_google_sheet",

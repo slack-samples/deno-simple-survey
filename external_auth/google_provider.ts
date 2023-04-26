@@ -11,7 +11,7 @@ if (!Deno.env.get("GOOGLE_CLIENT_ID")) {
  * External authentication uses the OAuth 2.0 protocol to connect with
  * accounts across various services. Once authenticated, an access token
  * can be used to interact with the service on behalf of the user.
- * https://api.slack.com/future/external-auth
+ * https://api.slack.com/automation/external-auth
  */
 const GoogleProvider = DefineOAuth2Provider({
   provider_key: "google",

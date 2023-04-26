@@ -5,7 +5,7 @@ import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
  * Event triggers automatically invoke a workflow when a specific event
  * happens in any specified channels. Filters can be used in combination
  * for limiting which events begin a workflow.
- * https://api.slack.com/future/triggers/event
+ * https://api.slack.com/automation/triggers/event
  */
 const promptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
   type: "event",

@@ -14,7 +14,7 @@ import { isTriggerOperationError } from "./utils/errors.ts";
  * Custom functions are the building blocks of workflows:
  * accepting input, performing calculations, handling view events,
  * and providing output.
- * https://api.slack.com/future/functions/custom
+ * https://api.slack.com/automation/functions/custom
  */
 
 export const ConfigureEventsFunctionDefinition = DefineFunction({
@@ -66,7 +66,7 @@ export default SlackFunction(
   /**
    * Modal view events can be handled from functions to create
    * interactive experiences with multiple views.
-   * https://api.slack.com/future/view-events
+   * https://api.slack.com/automation/view-events
    */
 
   // Gather input from the modal
