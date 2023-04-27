@@ -111,7 +111,7 @@ export function updateReactionTriggers(
       if (!updatePromptTrigger.ok) {
         throw new TriggerOperationError(
           updatePromptTrigger.error,
-          `failed to update PromptTrigger: ${trigger.id}`,
+          `Failed to update PromptTrigger: ${trigger.id}`,
         );
       }
     }
