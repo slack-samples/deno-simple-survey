@@ -1,12 +1,6 @@
 import { DefineOAuth2Provider, Schema } from "deno-slack-sdk/mod.ts";
 import "std/dotenv/load.ts";
 
-if (!Deno.env.get("GOOGLE_CLIENT_ID")) {
-  console.error(
-    'Missing environment variable "GOOGLE_CLIENT_ID" look into README.md to fix',
-  );
-}
-
 /**
  * External authentication uses the OAuth 2.0 protocol to connect with
  * accounts across various services. Once authenticated, an access token
