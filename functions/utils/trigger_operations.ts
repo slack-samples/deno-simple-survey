@@ -125,7 +125,7 @@ export function updateReactionTriggers(
       if (!updateRemoveTrigger.ok) {
         throw new TriggerOperationError(
           updateRemoveTrigger.error,
-          `failed to update RemoveTrigger: ${trigger.id}`,
+          `Failed to update RemoveTrigger: ${trigger.id}`,
         );
       }
     }
