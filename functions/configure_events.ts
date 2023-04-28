@@ -89,8 +89,10 @@ export default SlackFunction(
       updateReactionTriggers(client, triggers, filters);
     }
   } catch (err) {
-    console.error(err);
-    return { error: `${err.error}` };
+    if (isTriggerOperationError(err)) {
+      console.error(err);
+      return { error: `${err.error}` };
+    }
   }
 
   // Join all selected channels as the bot user
