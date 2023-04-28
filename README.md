@@ -101,11 +101,7 @@ Create a file named `.env` at the top level of your project. Copy the contents
 of `.env.example` into your new `.env` file. Take your Client ID and set it as
 the value for `GOOGLE_CLIENT_ID` (replacing `12345-example`) in your new `.env`
 file. This value will be used in `external_auth/google_provider.ts` – the custom
-OAuth2 provider definition for your Google project.
-
-Note: this environment variable is used to set a value that configures your
-application and is not required at runtime, therefore you do **not** need to use
-the `slack env add` command for [deployed apps](#deploying-your-app).
+OAuth2 provider definition for your Google project.[^0]
 
 #### Validate Your App
 
@@ -340,3 +336,7 @@ To learn more about developing automations on Slack, visit the following:
 - [Automation Overview](https://api.slack.com/automation)
 - [CLI Quick Reference](https://api.slack.com/automation/cli/quick-reference)
 - [Samples and Templates](https://api.slack.com/automation/samples)
+
+[^0]: this environment variable is used to set a value that configures your
+application and is not required at runtime, therefore you do **not** need to use
+the `slack env add` command for [deployed apps](#deploying-your-app).
