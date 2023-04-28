@@ -281,7 +281,10 @@ for your application on Slack infrastructure. Required scopes to use datastores
 include `datastore:write` and `datastore:read`.
 
 ### `external_auth/`
-[External authentication](https://api.slack.com/automation/external-auth) enables connections to external services using OAuth2. Once connected, you can perform actions as the authorized user on these services using custom functions.
+
+[External authentication](https://api.slack.com/automation/external-auth)
+enables connections to external services using OAuth2. Once connected, you can
+perform actions as the authorized user on these services using custom functions.
 
 ### `functions/`
 
