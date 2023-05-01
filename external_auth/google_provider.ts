@@ -1,10 +1,11 @@
 import { DefineOAuth2Provider, Schema } from "deno-slack-sdk/mod.ts";
+import "std/dotenv/load.ts";
 
 /**
  * External authentication uses the OAuth 2.0 protocol to connect with
  * accounts across various services. Once authenticated, an access token
  * can be used to interact with the service on behalf of the user.
- * https://api.slack.com/future/external-auth
+ * https://api.slack.com/automation/external-auth
  */
 const GoogleProvider = DefineOAuth2Provider({
   provider_key: "google",
@@ -13,7 +14,7 @@ const GoogleProvider = DefineOAuth2Provider({
     "provider_name": "Google",
     "authorization_url": "https://accounts.google.com/o/oauth2/auth",
     "token_url": "https://oauth2.googleapis.com/token",
-    "client_id": "", // TODO: Add your Client ID here!
+    "client_id": Deno.env.get("GOOGLE_CLIENT_ID")!,
     "scope": [
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/userinfo.email",

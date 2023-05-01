@@ -5,14 +5,16 @@ import {
   findReactionTriggers,
   getReactionTriggerChannelIds,
   getReactionTriggerSurveyorIds,
+  ReactionTriggerResponseObject,
   updateReactionTriggers,
 } from "./utils/trigger_operations.ts";
+import { isTriggerOperationError } from "./utils/errors.ts";
 
 /**
- * Custom funcitons are the building blocks of workflows:
+ * Custom functions are the building blocks of workflows:
  * accepting input, performing calculations, handling view events,
  * and providing output.
- * https://api.slack.com/future/functions/custom
+ * https://api.slack.com/automation/functions/custom
  */
 
 export const ConfigureEventsFunctionDefinition = DefineFunction({
@@ -31,25 +33,30 @@ export const ConfigureEventsFunctionDefinition = DefineFunction({
 export default SlackFunction(
   ConfigureEventsFunctionDefinition,
   async ({ inputs, client }) => {
-    const { error, triggers } = await findReactionTriggers(client);
-    if (error) return { error };
+    // Search for existing reaction triggers
+    let triggers: ReactionTriggerResponseObject[] = [];
+    try {
+      triggers = await findReactionTriggers(client);
+    } catch (err) {
+      if (isTriggerOperationError(err)) {
+        console.error(err);
+        return { error: `${err.error}` };
+      }
+    }
 
-    // Retreive existing channel and surveyor info
-    const channelIds = triggers != undefined
-      ? getReactionTriggerChannelIds(triggers)
-      : [];
-
-    const surveyorIds = triggers != undefined
-      ? getReactionTriggerSurveyorIds(triggers)
-      : [];
+    // Retrieve existing channel and surveyor info
+    const channelIds = getReactionTriggerChannelIds(triggers);
+    const surveyorIds = getReactionTriggerSurveyorIds(triggers);
 
     // Open the modal to configure the channel list for the workflows
-    const response = await client.views.open({
+    const viewOpenResponse = await client.views.open({
       interactivity_pointer: inputs.interactivityPointer,
       view: buildModalView(channelIds, surveyorIds),
     });
-    if (!response.ok) {
-      return { error: `Failed to open configurator modal: ${response.error}` };
+    if (!viewOpenResponse.ok) {
+      return {
+        error: `Failed to open configurator modal: ${viewOpenResponse.error}`,
+      };
     }
 
     // Set this to continue the interaction with this user
@@ -59,7 +66,7 @@ export default SlackFunction(
   /**
    * Modal view events can be handled from functions to create
    * interactive experiences with multiple views.
-   * https://api.slack.com/future/view-events
+   * https://api.slack.com/automation/view-events
    */
 
   // Gather input from the modal
@@ -69,31 +76,31 @@ export default SlackFunction(
     .selected_users as string[];
   const filters = { channelIds, reactorIds };
 
-  // Search for existing reaction triggers
-  const { error, triggers } = await findReactionTriggers(client);
-  if (error) {
-    return { error: `Failed to collect trigger information: ${error}` };
-  }
+  let triggers: ReactionTriggerResponseObject[] = [];
 
-  // Create new event reaction triggers or update existing ones
-  if (triggers === undefined || triggers.length === 0) {
-    const { error } = await createReactionTriggers(client, filters);
-    if (error) {
-      return { error: `Failed to create new event triggers: ${error}` };
+  try {
+    // Search for existing reaction triggers
+    triggers = await findReactionTriggers(client);
+
+    // Create new event reaction triggers or update existing ones
+    if (triggers.length === 0) {
+      await createReactionTriggers(client, filters);
+    } else {
+      updateReactionTriggers(client, triggers, filters);
     }
-  } else {
-    const { error } = updateReactionTriggers(client, triggers, filters);
-    if (error) {
-      return { error: `Failed to update existing event triggers: ${error}` };
+  } catch (err) {
+    if (isTriggerOperationError(err)) {
+      console.error(err);
+      return { error: `${err.error}` };
     }
   }
 
   // Join all selected channels as the bot user
   channelIds.forEach(async (channel) => {
-    const response = await client.conversations.join({ channel });
-    if (!response.ok) {
+    const joinResponse = await client.conversations.join({ channel });
+    if (!joinResponse.ok) {
       return {
-        error: `Failed to join channel <#${channel}>: ${response.error}`,
+        error: `Failed to join channel <#${channel}>: ${joinResponse.error}`,
       };
     }
   });
@@ -110,7 +117,7 @@ export default SlackFunction(
 // Internal functions
 // ---------------------------
 
-function buildModalView(channelIds: string[], surveyorIds: string[]) {
+function buildModalView(channelIds: Set<string>, surveyorIds: Set<string>) {
   return {
     "type": "modal",
     "callback_id": "configure-workflow",
@@ -133,7 +140,7 @@ function buildModalView(channelIds: string[], surveyorIds: string[]) {
             "type": "plain_text",
             "text": "Select channels to survey in",
           },
-          "initial_channels": channelIds,
+          "initial_channels": Array.from(channelIds),
           "action_id": "channels",
         },
         "label": {
@@ -150,7 +157,7 @@ function buildModalView(channelIds: string[], surveyorIds: string[]) {
             "type": "plain_text",
             "text": "Select users that can create surveys",
           },
-          "initial_users": surveyorIds,
+          "initial_users": Array.from(surveyorIds),
           "action_id": "users",
         },
         "label": {

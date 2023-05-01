@@ -3,13 +3,13 @@ import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateGoogleSheetFunctionDefinition } from "../functions/create_google_sheet.ts";
 import { CreateTriggerFunctionDefinition } from "../functions/create_survey_trigger.ts";
 import { SaveSurveyFunctionDefinition } from "../functions/save_survey.ts";
-import { RemoveThreadTriggerFunctionDefintion } from "../functions/remove_thread_trigger.ts";
+import { RemoveThreadTriggerFunctionDefinition } from "../functions/remove_thread_trigger.ts";
 
 /**
  * Workflows can also interweave the outputs from one step to
  * the inputs of another, compounding custom and built-in functions
  * to create connected processes.
- * https://api.slack.com/future/workflows#workflow-custom-functions
+ * https://api.slack.com/automation/workflows#workflow-custom-functions
  */
 const CreateSurveyWorkflow = DefineWorkflow({
   callback_id: "create_survey",
@@ -22,7 +22,7 @@ const CreateSurveyWorkflow = DefineWorkflow({
         description: "The channel containing the reacted message",
       },
       parent_ts: {
-        type: Schema.types.string,
+        type: Schema.slack.types.message_ts,
         description: "Message timestamp of the reacted message",
       },
       parent_url: {
@@ -56,7 +56,7 @@ const trigger = CreateSurveyWorkflow.addStep(CreateTriggerFunctionDefinition, {
 });
 
 // Step 3: Delete the prompt message and metadata
-CreateSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefintion, {
+CreateSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefinition, {
   channel_id: CreateSurveyWorkflow.inputs.channel_id,
   parent_ts: CreateSurveyWorkflow.inputs.parent_ts,
   reactor_id: CreateSurveyWorkflow.inputs.reactor_id,

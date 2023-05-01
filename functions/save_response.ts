@@ -44,7 +44,7 @@ export default SlackFunction(
     const submissionTime = new Date().toISOString();
 
     // Collect Google access token of the reactor
-    const auth = await client.apiCall("apps.auth.external.get", {
+    const auth = await client.apps.auth.external.get({
       external_token_id: inputs.reactor_access_token_id,
     });
 
@@ -55,7 +55,7 @@ export default SlackFunction(
     // Append response to spreadsheet
     const url =
       `https://sheets.googleapis.com/v4/spreadsheets/${google_spreadsheet_id}/values/${GOOGLE_SPREADSHEET_RANGE}:append?valueInputOption=USER_ENTERED`;
-    const sheets = await fetch(url, {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${auth.external_token}`,
@@ -67,9 +67,9 @@ export default SlackFunction(
       }),
     });
 
-    if (!sheets.ok) {
+    if (!response.ok) {
       return {
-        error: `Failed to save survey response: ${sheets.statusText}`,
+        error: `Failed to save survey response: ${response.statusText}`,
       };
     }
 
