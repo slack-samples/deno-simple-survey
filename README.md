@@ -102,8 +102,8 @@ Start by renaming the `.env.example` file at the top level of your project to
 store sensitive, app-specific variables that are determined by the environment
 being used.
 
-From your new Google project's dashboard, copy the **Client ID** and paste it as the
-value for `GOOGLE_CLIENT_ID` in the `.env` file. This value will be used in
+From your new Google project's dashboard, copy the **Client ID** and paste it as
+the value for `GOOGLE_CLIENT_ID` in the `.env` file. This value will be used in
 `external_auth/google_provider.ts` – the custom OAuth2 provider definition for
 this Google project.
 
