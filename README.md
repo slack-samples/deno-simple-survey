@@ -102,10 +102,10 @@ Start by renaming the `.env.example` file at the top level of your project to
 store sensitive, app-specific variables that are determined by the environment
 being used.
 
-From your new GitHub app's dashboard, copy the **Client ID** and paste it as the
-value for `GITHUB_CLIENT_ID` in the `.env` file. This value will be used in
-`external_auth/github_provider.ts` – the custom OAuth2 provider definition for
-this GitHub app.
+From your new Google project's dashboard, copy the **Client ID** and paste it as
+the value for `GOOGLE_CLIENT_ID` in the `.env` file. This value will be used in
+`external_auth/google_provider.ts` – the custom OAuth2 provider definition for
+this Google project.
 
 Once complete, use `slack run` or `slack deploy` to update your local or hosted
 app!
@@ -146,7 +146,7 @@ With your client secret ready, run the following command, replacing
 $ slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
 ```
 
-When prompted to select an app, choose the `(dev)` app only if you're running
+When prompted to select an app, choose the `(local)` app only if you're running
 the app locally.
 
 #### Initiate the OAuth2 Flow
