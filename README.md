@@ -146,7 +146,7 @@ With your client secret ready, run the following command, replacing
 $ slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
 ```
 
-When prompted to select an app, choose the `(dev)` app only if you're running
+When prompted to select an app, choose the `Local` app only if you're running
 the app locally.
 
 #### Initiate the OAuth2 Flow
