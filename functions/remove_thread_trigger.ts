@@ -3,7 +3,7 @@ import SurveyDatastore, {
   SurveyDatastoreSchema,
 } from "../datastores/survey_datastore.ts";
 
-export const RemoveThreadTriggerFunctionDefintion = DefineFunction({
+export const RemoveThreadTriggerFunctionDefinition = DefineFunction({
   callback_id: "remove_thread_trigger",
   title: "Remove thread trigger",
   description: "Delete prompt and survey data for a message",
@@ -20,7 +20,7 @@ export const RemoveThreadTriggerFunctionDefintion = DefineFunction({
 });
 
 export default SlackFunction(
-  RemoveThreadTriggerFunctionDefintion,
+  RemoveThreadTriggerFunctionDefinition,
   async ({ inputs, client }) => {
     const { channel_id, parent_ts, reactor_id } = inputs;
 

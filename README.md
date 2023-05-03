@@ -12,6 +12,7 @@ https://user-images.githubusercontent.com/18134219/215910112-68c08e0f-597d-4813-
   - [Install the Slack CLI](#install-the-slack-cli)
   - [Clone the Sample App](#clone-the-sample-app)
   - [Prepare Google Services](#prepare-google-services)
+- [Running Your Project Locally](#running-your-project-locally)
 - [Creating Triggers](#creating-triggers)
 - [Datastores](#datastores)
 - [Testing](#testing)
@@ -64,9 +65,9 @@ $ cd my-app
 
 ### Prepare Google Services
 
-With [external authentication](https://api.slack.com/future/external-auth) you
-can programmatically interact with Google services and APIs from your app, as
-though you're the authorized user.
+With [external authentication](https://api.slack.com/automation/external-auth)
+you can programmatically interact with Google services and APIs from your app,
+as though you're the authorized user.
 
 The client credentials needed for these interactions can be collected from a
 Google Cloud project with OAuth enabled and with access to the appropriate
@@ -96,16 +97,45 @@ You'll use these newly created client credentials in the next steps.
 
 #### Set the Client ID
 
-Take your client ID and add it as the value for `client_id` in
+Start by renaming the `.env.example` file at the top level of your project to
+`.env`, being sure not to commit this file to version control. This file will
+store sensitive, app-specific variables that are determined by the environment
+being used.
+
+From your new Google project's dashboard, copy the **Client ID** and paste it as
+the value for `GOOGLE_CLIENT_ID` in the `.env` file. This value will be used in
 `external_auth/google_provider.ts` – the custom OAuth2 provider definition for
-your Google project.
+this Google project.
 
-Once complete, update your local or hosted app with slack run or slack deploy to
-create an environment for storing your external authentication client secret and
-access token.
+Once complete, use `slack run` or `slack deploy` to update your local or hosted
+app!
 
-> :warning: Running these commands will warn you that a client secret must be
-> added for your OAuth2 provider. We'll take care of this in the next step!
+> Note: Unlike environment variables used at runtime, this variable is only used
+> when generating your app manifest. Therefore, you do **not** need to use the
+> `slack env add` command to set this value for
+> [deployed apps](#deploying-your-app).
+
+#### Validate Your App
+
+At this point you should be able to build and start your project. Go ahead and
+execute the following command to see if your app works properly.
+
+When prompted:
+
+- install the app to your workspace
+- create the `triggers/configurator.ts` [trigger](#creating-triggers).
+
+```zsh
+# Run app locally
+$ slack run
+
+Connected, awaiting events
+```
+
+Note: Ignore warnings at this stage!
+
+Once complete, press `<CTRL> + C` to end the process. You will need to create
+additional secrets before using your application.
 
 #### Save the Client Secret
 
@@ -116,13 +146,13 @@ With your client secret ready, run the following command, replacing
 $ slack external-auth add-secret --provider google --secret GOOGLE_CLIENT_SECRET
 ```
 
-When prompted to select an app, choose the `(dev)` app only if you're running
+When prompted to select an app, choose the `(local)` app only if you're running
 the app locally.
 
 #### Initiate the OAuth2 Flow
 
 With your Google project created and the Client ID and secret set, you're ready
-to initate the OAuth flow!
+to initiate the OAuth flow!
 
 If all the right values are in place, the following command will prompt you to
 choose an app, select a provider (hint: choose the `google` one), then pick the
@@ -133,8 +163,8 @@ $ slack external-auth add
 ```
 
 > :unlock: Spreadsheets generated as part of the **Create a survey** workflow
-> will be created from the acount you authenticate with! To limit the users that
-> can create surveys, an **Event configurator** workflow is used.
+> will be created from the account you authenticate with! To limit the users
+> that can create surveys, an **Event configurator** workflow is used.
 
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!

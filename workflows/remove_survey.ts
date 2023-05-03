@@ -1,5 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { RemoveThreadTriggerFunctionDefintion } from "../functions/remove_thread_trigger.ts";
+import { RemoveThreadTriggerFunctionDefinition } from "../functions/remove_thread_trigger.ts";
 
 const RemoveSurveyWorkflow = DefineWorkflow({
   callback_id: "remove_survey",
@@ -12,7 +12,7 @@ const RemoveSurveyWorkflow = DefineWorkflow({
         description: "The channel containing the un-reacted message",
       },
       parent_ts: {
-        type: Schema.types.string,
+        type: Schema.slack.types.message_ts,
         description: "Message timestamp of the un-reacted message",
       },
       reactor_id: {
@@ -25,7 +25,7 @@ const RemoveSurveyWorkflow = DefineWorkflow({
 });
 
 // Step 1: Delete prompt/survey message and link trigger
-RemoveSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefintion, {
+RemoveSurveyWorkflow.addStep(RemoveThreadTriggerFunctionDefinition, {
   channel_id: RemoveSurveyWorkflow.inputs.channel_id,
   parent_ts: RemoveSurveyWorkflow.inputs.parent_ts,
   reactor_id: RemoveSurveyWorkflow.inputs.reactor_id,

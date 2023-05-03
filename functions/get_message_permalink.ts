@@ -12,7 +12,7 @@ export const GetMessagePermalinkFunctionDefinition = DefineFunction({
         description: "Channel ID the message was posted to",
       },
       parent_ts: {
-        type: Schema.types.string,
+        type: Schema.slack.types.message_ts,
         description: "Message timestamp of the message",
       },
     },

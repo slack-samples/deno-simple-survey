@@ -13,7 +13,7 @@ export const CreatePromptTriggerFunctionDefinition = DefineFunction({
         description: "The channel containing the reacted message",
       },
       parent_ts: {
-        type: Schema.types.string,
+        type: Schema.slack.types.message_ts,
         description: "Message timestamp of the reacted message",
       },
       parent_url: {
