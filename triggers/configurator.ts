@@ -1,4 +1,5 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
+import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 import ConfiguratorWorkflow from "../workflows/configurator.ts";
 
 /**
@@ -8,12 +9,12 @@ import ConfiguratorWorkflow from "../workflows/configurator.ts";
  * https://api.slack.com/automation/triggers
  */
 const configuratorTrigger: Trigger<typeof ConfiguratorWorkflow.definition> = {
-  type: "shortcut",
+  type: TriggerTypes.Shortcut,
   name: "Simple Survey configurator",
   description: "Configure the channels to survey and surveying users",
   workflow: `#/workflows/${ConfiguratorWorkflow.definition.callback_id}`,
   inputs: {
-    interactivity: { value: "{{data.interactivity}}" },
+    interactivity: { value: TriggerContextData.Shortcut.interactivity },
   },
 };
 
