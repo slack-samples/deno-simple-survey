@@ -17,6 +17,9 @@ const CreateSurveyWorkflow = DefineWorkflow({
   description: "Add a request for feedback to a message",
   input_parameters: {
     properties: {
+      parent_message_context: {
+        type: Schema.slack.types.message_context,
+      },
       channel_id: {
         type: Schema.slack.types.channel_id,
         description: "The channel containing the reacted message",
@@ -34,7 +37,13 @@ const CreateSurveyWorkflow = DefineWorkflow({
         description: "User that added the reacji",
       },
     },
-    required: ["channel_id", "parent_ts", "parent_url", "reactor_id"],
+    required: [
+      "parent_message_context",
+      "channel_id",
+      "parent_ts",
+      "parent_url",
+      "reactor_id",
+    ],
   },
 });
 
@@ -73,10 +82,7 @@ CreateSurveyWorkflow.addStep(Schema.slack.functions.SendDm, {
 const message = CreateSurveyWorkflow.addStep(
   Schema.slack.functions.ReplyInThread,
   {
-    message_context: {
-      channel_id: CreateSurveyWorkflow.inputs.channel_id,
-      message_ts: CreateSurveyWorkflow.inputs.parent_ts,
-    },
+    message_context: CreateSurveyWorkflow.inputs.parent_message_context,
     message:
       `Your feedback is requested – <${trigger.outputs.trigger_url}|survey now>!`,
   },

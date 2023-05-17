@@ -1,5 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { Connectors } from "deno-slack-connectors/mod.ts";
 import { SaveResponseFunctionDefinition } from "../functions/save_response.ts";
+import { GetExternalAuth } from "../functions/get_external_auth.ts";
 
 /**
  * A workflow is a set of steps that are executed in order.
@@ -69,12 +71,25 @@ const response = AnswerSurveyWorkflow.addStep(
   },
 );
 
-// Step 2: Append responses to the spreadsheet
-AnswerSurveyWorkflow.addStep(SaveResponseFunctionDefinition, {
+const externalAuth = AnswerSurveyWorkflow.addStep(GetExternalAuth, {
   reactor_access_token_id: AnswerSurveyWorkflow.inputs.reactor_access_token_id,
-  google_spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
-  impression: response.outputs.fields.impression,
-  comments: response.outputs.fields.comments || "",
 });
+AnswerSurveyWorkflow.addStep(Connectors.GoogleSheets.AddSpreadsheetRow, {
+  google_access_token: externalAuth.outputs.external_token,
+  spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
+  columns: [
+    response.outputs.fields.impression,
+    response.outputs.fields.comments || "",
+  ],
+  sheet_title: "Responses!A2:C2",
+});
+
+// Step 2: Append responses to the spreadsheet
+// AnswerSurveyWorkflow.addStep(SaveResponseFunctionDefinition, {
+//   reactor_access_token_id: AnswerSurveyWorkflow.inputs.reactor_access_token_id,
+//   google_spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
+//   impression: response.outputs.fields.impression,
+//   comments: response.outputs.fields.comments || "",
+// });
 
 export default AnswerSurveyWorkflow;

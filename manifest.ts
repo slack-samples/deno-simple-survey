@@ -25,7 +25,7 @@ export default Manifest({
     PromptSurveyWorkflow,
     RemoveSurveyWorkflow,
   ],
-  outgoingDomains: ["sheets.googleapis.com"],
+  outgoingDomains: ["sheets.googleapis.com", "raw.githubusercontent.com"],
   botScopes: [
     "channels:join",
     "chat:write",

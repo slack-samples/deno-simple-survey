@@ -8,6 +8,9 @@ export const CreatePromptTriggerFunctionDefinition = DefineFunction({
   source_file: "functions/create_prompt_trigger.ts",
   input_parameters: {
     properties: {
+      parent_message_context: {
+        type: Schema.slack.types.message_context,
+      },
       channel_id: {
         type: Schema.slack.types.channel_id,
         description: "The channel containing the reacted message",
@@ -49,6 +52,7 @@ export default SlackFunction(
       description: "Collect feedback within a thread",
       workflow: `#/workflows/${CreateSurveyWorkflow.definition.callback_id}`,
       inputs: {
+        parent_message_context: { value: inputs.parent_message_context },
         channel_id: { value: inputs.channel_id },
         parent_ts: { value: inputs.parent_ts },
         parent_url: { value: inputs.parent_url },

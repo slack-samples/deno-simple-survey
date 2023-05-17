@@ -9,6 +9,9 @@ const PromptSurveyWorkflow = DefineWorkflow({
   description: "Ask if the reacting user wants to create a new survey",
   input_parameters: {
     properties: {
+      parent_message_context: {
+        type: Schema.slack.types.message_context,
+      },
       channel_id: {
         type: Schema.slack.types.channel_id,
         description: "The channel containing the reacted message",
@@ -22,7 +25,12 @@ const PromptSurveyWorkflow = DefineWorkflow({
         description: "User that added the reacji",
       },
     },
-    required: ["channel_id", "parent_ts", "reactor_id"],
+    required: [
+      "parent_message_context",
+      "channel_id",
+      "parent_ts",
+      "reactor_id",
+    ],
   },
 });
 
@@ -39,6 +47,7 @@ const parentPermalink = PromptSurveyWorkflow.addStep(
 const promptTrigger = PromptSurveyWorkflow.addStep(
   CreatePromptTriggerFunctionDefinition,
   {
+    parent_message_context: PromptSurveyWorkflow.inputs.parent_message_context,
     channel_id: PromptSurveyWorkflow.inputs.channel_id,
     parent_ts: PromptSurveyWorkflow.inputs.parent_ts,
     parent_url: parentPermalink.outputs.permalink,
