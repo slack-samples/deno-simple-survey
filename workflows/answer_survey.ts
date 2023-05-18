@@ -1,7 +1,5 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { Connectors } from "deno-slack-connectors/mod.ts";
-import { SaveResponseFunctionDefinition } from "../functions/save_response.ts";
-import { GetExternalAuth } from "../functions/get_external_auth.ts";
 
 /**
  * A workflow is a set of steps that are executed in order.
@@ -22,7 +20,7 @@ const AnswerSurveyWorkflow = DefineWorkflow({
         type: Schema.types.string,
         description: "Spreadsheet ID for storing survey results",
       },
-      reactor_access_token_id: {
+      reactor_access_token_id: { // TODO: remove this unrequired param
         type: Schema.types.string,
         description: "External authentication access token for the reactor",
       },
@@ -71,25 +69,17 @@ const response = AnswerSurveyWorkflow.addStep(
   },
 );
 
-const externalAuth = AnswerSurveyWorkflow.addStep(GetExternalAuth, {
-  reactor_access_token_id: AnswerSurveyWorkflow.inputs.reactor_access_token_id,
-});
 AnswerSurveyWorkflow.addStep(Connectors.GoogleSheets.AddSpreadsheetRow, {
-  google_access_token: externalAuth.outputs.external_token,
+  google_access_token: {
+    credential_source: "END_USER",
+  },
   spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
   columns: [
+    1234, // TODO: Make this the timestamp
     response.outputs.fields.impression,
     response.outputs.fields.comments || "",
   ],
-  sheet_title: "Responses!A2:C2",
+  sheet_title: "Responses",
 });
-
-// Step 2: Append responses to the spreadsheet
-// AnswerSurveyWorkflow.addStep(SaveResponseFunctionDefinition, {
-//   reactor_access_token_id: AnswerSurveyWorkflow.inputs.reactor_access_token_id,
-//   google_spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
-//   impression: response.outputs.fields.impression,
-//   comments: response.outputs.fields.comments || "",
-// });
 
 export default AnswerSurveyWorkflow;
