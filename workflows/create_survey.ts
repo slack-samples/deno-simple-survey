@@ -61,7 +61,6 @@ const sheet = CreateSurveyWorkflow.addStep(
 // Step 2: Create a link trigger for the survey
 const trigger = CreateSurveyWorkflow.addStep(CreateTriggerFunctionDefinition, {
   google_spreadsheet_id: sheet.outputs.google_spreadsheet_id,
-  reactor_access_token_id: sheet.outputs.reactor_access_token_id,
 });
 
 // Step 3: Delete the prompt message and metadata

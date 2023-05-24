@@ -20,15 +20,10 @@ const AnswerSurveyWorkflow = DefineWorkflow({
         type: Schema.types.string,
         description: "Spreadsheet ID for storing survey results",
       },
-      reactor_access_token_id: { // TODO: remove this unrequired param
-        type: Schema.types.string,
-        description: "External authentication access token for the reactor",
-      },
     },
     required: [
       "interactivity",
       "google_spreadsheet_id",
-      "reactor_access_token_id",
     ],
   },
 });
@@ -69,17 +64,20 @@ const response = AnswerSurveyWorkflow.addStep(
   },
 );
 
-AnswerSurveyWorkflow.addStep(Connectors.GoogleSheets.AddSpreadsheetRow, {
-  google_access_token: {
-    credential_source: "END_USER",
+AnswerSurveyWorkflow.addStep(
+  Connectors.GoogleSheets.functions.AddSpreadsheetRow,
+  {
+    google_access_token: {
+      credential_source: "END_USER",
+    },
+    spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
+    columns: [
+      "=NOW()",
+      response.outputs.fields.impression,
+      response.outputs.fields.comments || "",
+    ],
+    sheet_title: "Responses",
   },
-  spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
-  columns: [
-    1234, // TODO: Make this the timestamp
-    response.outputs.fields.impression,
-    response.outputs.fields.comments || "",
-  ],
-  sheet_title: "Responses",
-});
+);
 
 export default AnswerSurveyWorkflow;

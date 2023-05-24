@@ -12,12 +12,8 @@ export const CreateTriggerFunctionDefinition = DefineFunction({
         type: Schema.types.string,
         description: "Spreadsheet ID to store survey results",
       },
-      reactor_access_token_id: {
-        type: Schema.types.string,
-        description: "The Google access token ID of the reactor",
-      },
     },
-    required: ["google_spreadsheet_id", "reactor_access_token_id"],
+    required: ["google_spreadsheet_id"],
   },
   output_parameters: {
     properties: {
@@ -37,7 +33,7 @@ export const CreateTriggerFunctionDefinition = DefineFunction({
 export default SlackFunction(
   CreateTriggerFunctionDefinition,
   async ({ inputs, client }) => {
-    const { google_spreadsheet_id, reactor_access_token_id } = inputs;
+    const { google_spreadsheet_id } = inputs;
 
     const trigger = await client.workflows.triggers.create<
       typeof AnswerSurveyWorkflow.definition
@@ -49,7 +45,6 @@ export default SlackFunction(
       inputs: {
         interactivity: { value: "{{data.interactivity}}" },
         google_spreadsheet_id: { value: google_spreadsheet_id },
-        reactor_access_token_id: { value: reactor_access_token_id },
       },
     });
 

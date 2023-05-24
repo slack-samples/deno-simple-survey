@@ -33,15 +33,10 @@ export const CreateGoogleSheetFunctionDefinition = DefineFunction({
         type: Schema.types.string,
         description: "Newly created spreadsheet URL",
       },
-      reactor_access_token_id: {
-        type: Schema.types.string,
-        description: "The Google access token ID of the reactor",
-      },
     },
     required: [
       "google_spreadsheet_id",
       "google_spreadsheet_url",
-      "reactor_access_token_id",
     ],
   },
 });
@@ -96,7 +91,6 @@ export default SlackFunction(
       outputs: {
         google_spreadsheet_id: sheets.spreadsheetId,
         google_spreadsheet_url: sheets.spreadsheetUrl,
-        reactor_access_token_id: inputs.google_access_token_id,
       },
     };
   },
