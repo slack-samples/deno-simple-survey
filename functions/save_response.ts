@@ -31,7 +31,6 @@ export const SaveResponseFunctionDefinition = DefineFunction({
       "reactor_access_token_id",
       "google_spreadsheet_id",
       "impression",
-      "comments",
     ],
   },
   output_parameters: { properties: {}, required: [] },
@@ -63,7 +62,7 @@ export default SlackFunction(
       body: JSON.stringify({
         range: GOOGLE_SPREADSHEET_RANGE,
         majorDimension: "ROWS",
-        values: [[submissionTime, impression, comments]],
+        values: [[submissionTime, impression, comments ?? ""]],
       }),
     });
 
