@@ -74,7 +74,7 @@ AnswerSurveyWorkflow.addStep(SaveResponseFunctionDefinition, {
   reactor_access_token_id: AnswerSurveyWorkflow.inputs.reactor_access_token_id,
   google_spreadsheet_id: AnswerSurveyWorkflow.inputs.google_spreadsheet_id,
   impression: response.outputs.fields.impression,
-  comments: response.outputs.fields.comments || "",
+  comments: response.outputs.fields.comments,
 });
 
 export default AnswerSurveyWorkflow;

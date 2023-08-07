@@ -169,6 +169,24 @@ $ slack external-auth add
 Once you've successfully connected your account, you're almost ready to create
 surveys at the press of a reaction!
 
+To complete the connection process, you need to let your app know what
+authenticated account you'll be using for specific workflows.
+
+For this specific app, only the `CreateSurvey` workflow requires a configured
+external Google account, so we can set that up with our freshly authed account.
+To do so, run:
+
+```sh
+slack external-auth select-auth
+```
+
+Select the workspace and app environment for your app, then select the
+`#/workflows/create_survey` workflow to give it access to your Google account.
+Then, select the same provider and the external account that you authenticated
+with above.
+
+At last - you're all set to survey! :sparkles:
+
 ## Running Your Project Locally
 
 While building your app, you can see your changes appear in your workspace in
