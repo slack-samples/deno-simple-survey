@@ -162,6 +162,17 @@ authenticated account.
 
 Keep reading on to create a link into this workflow and to connect your account!
 
+#### Collaborating with External Authentication
+
+When developing collaboratively on a deployed app, the external authentication
+tokens used for your app will be shared by all collaborators. For this reason,
+we recommend creating your Google OAuth App using an organization account so all
+collaborators can access the same account.
+
+Local development does not require a shared account, as each developer will have
+their own local app and can individually add their own external authentication
+tokens.
+
 ## Running Your Project Locally
 
 While building your app, you can see your changes appear in your workspace in
