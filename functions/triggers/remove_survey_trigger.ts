@@ -12,16 +12,7 @@ const removeSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {
     filter: {
       version: 1,
       root: {
-        operator: "AND",
-        inputs: [{
-          statement: "{{data.reaction}} == clipboard",
-        }, {
-          operator: "OR",
-          inputs: [{
-            // User IDs are configured by the configurator workflow
-            statement: "{{data.user_id}} == USLACKBOT",
-          }],
-        }],
+        statement: "{{data.reaction}} == clipboard",
       },
     },
   },
