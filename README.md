@@ -151,41 +151,16 @@ the app locally.
 
 #### Initiate the OAuth2 Flow
 
-With your Google project created and the Client ID and secret set, you're ready
-to initiate the OAuth flow!
+With your Google project created and the Client ID and secret set, you're just
+about ready to initiate the OAuth flow!
 
-If all the right values are in place, the following command will prompt you to
-choose an app, select a provider (hint: choose the `google` one), then pick the
-Google account you want to authenticate with:
+The "Create a survey" workflow collects credentials using the
+[end user tokens](https://api.slack.com/automation/external-auth#workflow__using-end-user-tokens)
+that are gathered when this workflow is invoked. This prompts the person running
+the workflow to authenticate with Google and then performs actions as the
+authenticated account.
 
-```sh
-$ slack external-auth add
-```
-
-> :unlock: Spreadsheets generated as part of the **Create a survey** workflow
-> will be created from the account you authenticate with! To limit the users
-> that can create surveys, an **Event configurator** workflow is used.
-
-Once you've successfully connected your account, you're almost ready to create
-surveys at the press of a reaction!
-
-To complete the connection process, you need to let your app know what
-authenticated account you'll be using for specific workflows.
-
-For this specific app, only the `CreateSurvey` workflow requires a configured
-external Google account, so we can set that up with our freshly authed account.
-To do so, run:
-
-```sh
-slack external-auth select-auth
-```
-
-Select the workspace and app environment for your app, then select the
-`#/workflows/create_survey` workflow to give it access to your Google account.
-Then, select the same provider and the external account that you authenticated
-with above.
-
-At last - you're all set to survey! :sparkles:
+Keep reading on to create a link into this workflow and to connect your account!
 
 ## Running Your Project Locally
 
