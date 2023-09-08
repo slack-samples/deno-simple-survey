@@ -1,4 +1,5 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 import CreateSurveyWorkflow from "../workflows/create_survey.ts";
 
 export const CreatePromptTriggerFunctionDefinition = DefineFunction({
@@ -44,7 +45,7 @@ export default SlackFunction(
     const trigger = await client.workflows.triggers.create<
       typeof CreateSurveyWorkflow.definition
     >({
-      type: "shortcut",
+      type: TriggerTypes.Shortcut,
       name: "Create a survey",
       description: "Collect feedback within a thread",
       workflow: `#/workflows/${CreateSurveyWorkflow.definition.callback_id}`,
@@ -52,7 +53,7 @@ export default SlackFunction(
         channel_id: { value: inputs.channel_id },
         parent_ts: { value: inputs.parent_ts },
         parent_url: { value: inputs.parent_url },
-        reactor_id: { value: "{{data.user_id}}" },
+        reactor_id: { value: TriggerContextData.Shortcut.user_id },
       },
       shortcut: { button_text: "Create" },
     });

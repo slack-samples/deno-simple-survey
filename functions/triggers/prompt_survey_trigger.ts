@@ -1,4 +1,9 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
+import {
+  TriggerContextData,
+  TriggerEventTypes,
+  TriggerTypes,
+} from "deno-slack-api/mod.ts";
 import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
 
 /**
@@ -18,14 +23,15 @@ const promptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
     filter: {
       version: 1,
       root: {
-        statement: "{{data.reaction}} == clipboard",
+        statement:
+          `${TriggerContextData.Event.ReactionAdded.reaction} == clipboard`,
       },
     },
   },
   inputs: {
-    channel_id: { value: "{{data.channel_id}}" },
-    parent_ts: { value: "{{data.message_ts}}" },
-    reactor_id: { value: "{{data.user_id}}" },
+    channel_id: { value: TriggerContextData.Event.ReactionAdded.channel_id },
+    parent_ts: { value: TriggerContextData.Event.ReactionAdded.message_ts },
+    reactor_id: { value: TriggerContextData.Event.ReactionAdded.user_id },
   },
 };
 

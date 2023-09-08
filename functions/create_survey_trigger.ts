@@ -1,4 +1,5 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 import AnswerSurveyWorkflow from "../workflows/answer_survey.ts";
 
 export const CreateTriggerFunctionDefinition = DefineFunction({
@@ -42,12 +43,12 @@ export default SlackFunction(
     const trigger = await client.workflows.triggers.create<
       typeof AnswerSurveyWorkflow.definition
     >({
-      type: "shortcut",
+      type: TriggerTypes.Shortcut,
       name: "Survey your thoughts",
       description: "Share your thoughts about this post",
       workflow: `#/workflows/${AnswerSurveyWorkflow.definition.callback_id}`,
       inputs: {
-        interactivity: { value: "{{data.interactivity}}" },
+        interactivity: { value: TriggerContextData.Shortcut.interactivity },
         google_spreadsheet_id: { value: google_spreadsheet_id },
         reactor_access_token_id: { value: reactor_access_token_id },
       },
