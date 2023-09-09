@@ -236,13 +236,12 @@ $ slack trigger create --trigger-def triggers/configurator.ts
 ### Using the Configurator Trigger
 
 With the configurator link trigger (`triggers/configurator.ts`) you can
-configure the channel list and surveying users, as shown below:
+configure the list of channels to survey, as shown below:
 
 <img src="https://github.com/slack-samples/deno-simple-survey/assets/18134219/479bcfb9-ca83-4844-a98a-02966d6d595d" width="600">
 
-Once the app is added to the channel being surveyed, configured users that add a
-`:clipboard:` reaction to a message will begin the survey process with a prompt
-to create a new survey.
+Once the app is added to the surveying channels, adding a `:clipboard:` reaction
+to a message will begin the survey process with a prompt to create a new survey.
 
 ## Datastores
 
