@@ -284,8 +284,9 @@ Once development is complete, deploy the app to Slack infrastructure using
 $ slack deploy
 ```
 
-When deploying for the first time, no triggers or authentication secrets will
-exist so you'll be prompted to [create a new link trigger](#creating-triggers).
+When deploying for the first time, no triggers or authentication client secrets
+will exist so you'll be prompted to
+[create a new link trigger](#creating-triggers).
 
 Go ahead and create the `triggers/configurator.ts` link trigger when prompted,
 then [save the client secret](#save-the-client-secret) for your deployed app.
