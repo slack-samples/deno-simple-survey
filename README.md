@@ -85,7 +85,8 @@ Next,
 [create an OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
 for your app. The "User Type" and other required app information can be
 configured as you wish. No additional scopes need to be added here, and you can
-add test users for development if you want.
+add test users for development if you want (especially useful if one Google account owns the Google
+Cloud project but you want to test the authentication flow using a different Google account).
 
 Client credentials can be collected by
 [creating an OAuth client ID](https://console.cloud.google.com/apis/credentials/oauthclient)
