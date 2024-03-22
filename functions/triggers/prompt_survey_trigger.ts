@@ -1,4 +1,9 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
+import {
+  TriggerContextData,
+  TriggerEventTypes,
+  TriggerTypes,
+} from "deno-slack-api/mod.ts";
 import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
 
 /**
@@ -8,31 +13,25 @@ import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
  * https://api.slack.com/automation/triggers/event
  */
 const promptSurveyTrigger: Trigger<typeof PromptSurveyWorkflow.definition> = {
-  type: "event",
+  type: TriggerTypes.Event,
   name: "Survey reacji added",
   description: "Initiate survey creation by adding a clipboard reacji",
   workflow: `#/workflows/${PromptSurveyWorkflow.definition.callback_id}`,
   event: {
-    event_type: "slack#/events/reaction_added",
+    event_type: TriggerEventTypes.ReactionAdded,
     channel_ids: [""], // Channel IDs are added by the configurator workflow
     filter: {
       version: 1,
       root: {
-        operator: "AND",
-        inputs: [{
-          statement: "{{data.reaction}} == clipboard",
-        }, {
-          // User IDs are configured by the configurator workflow
-          operator: "OR",
-          inputs: [{ statement: "{{data.user_id}} == USLACKBOT" }],
-        }],
+        statement:
+          `${TriggerContextData.Event.ReactionAdded.reaction} == clipboard`,
       },
     },
   },
   inputs: {
-    channel_id: { value: "{{data.channel_id}}" },
-    parent_ts: { value: "{{data.message_ts}}" },
-    reactor_id: { value: "{{data.user_id}}" },
+    channel_id: { value: TriggerContextData.Event.ReactionAdded.channel_id },
+    parent_ts: { value: TriggerContextData.Event.ReactionAdded.message_ts },
+    reactor_id: { value: TriggerContextData.Event.ReactionAdded.user_id },
   },
 };
 
