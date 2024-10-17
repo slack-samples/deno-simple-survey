@@ -4,7 +4,6 @@ import {
   createReactionTriggers,
   findReactionTriggers,
   getReactionTriggerChannelIds,
-  getReactionTriggerSurveyorIds,
   ReactionTriggerResponseObject,
   updateReactionTriggers,
 } from "./utils/trigger_operations.ts";
@@ -44,14 +43,13 @@ export default SlackFunction(
       }
     }
 
-    // Retrieve existing channel and surveyor info
+    // Retrieve existing channel survey info
     const channelIds = getReactionTriggerChannelIds(triggers);
-    const surveyorIds = getReactionTriggerSurveyorIds(triggers);
 
     // Open the modal to configure the channel list for the workflows
     const viewOpenResponse = await client.views.open({
       interactivity_pointer: inputs.interactivityPointer,
-      view: buildModalView(channelIds, surveyorIds),
+      view: buildModalView(channelIds),
     });
     if (!viewOpenResponse.ok) {
       return {
@@ -66,15 +64,13 @@ export default SlackFunction(
   /**
    * Modal view events can be handled from functions to create
    * interactive experiences with multiple views.
-   * https://api.slack.com/automation/view-events
+   * https://api.slack.com/automation/interactive-modals#update
    */
 
   // Gather input from the modal
   const channelIds = view.state.values.channel_block.channels
     .selected_channels as string[];
-  const reactorIds = view.state.values.user_block.users
-    .selected_users as string[];
-  const filters = { channelIds, reactorIds };
+  const filters = { channelIds };
 
   let triggers: ReactionTriggerResponseObject[] = [];
 
@@ -117,7 +113,7 @@ export default SlackFunction(
 // Internal functions
 // ---------------------------
 
-function buildModalView(channelIds: Set<string>, surveyorIds: Set<string>) {
+function buildModalView(channelIds: Set<string>) {
   return {
     "type": "modal",
     "callback_id": "configure-workflow",
@@ -147,33 +143,6 @@ function buildModalView(channelIds: Set<string>, surveyorIds: Set<string>) {
           "type": "plain_text",
           "text": "Channels to survey",
         },
-      },
-      {
-        "type": "input",
-        "block_id": "user_block",
-        "element": {
-          "type": "multi_users_select",
-          "placeholder": {
-            "type": "plain_text",
-            "text": "Select users that can create surveys",
-          },
-          "initial_users": Array.from(surveyorIds),
-          "action_id": "users",
-        },
-        "label": {
-          "type": "plain_text",
-          "text": "Surveying users",
-        },
-      },
-      {
-        "type": "context",
-        "elements": [
-          {
-            "type": "plain_text",
-            "text":
-              "Spreadsheets will be created using the external auth tokens added from the CLI",
-          },
-        ],
       },
     ],
   };

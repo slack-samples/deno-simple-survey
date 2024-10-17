@@ -56,15 +56,11 @@ export async function findReactionTriggers(
  */
 export async function createReactionTriggers(
   client: SlackAPIClient,
-  filters: { channelIds: string[]; reactorIds: string[] },
+  filters: { channelIds: string[] },
 ) {
-  const { channelIds, reactorIds } = filters;
-  const reactorFilter = reactorIds.map((id) => {
-    return { statement: `{{data.user_id}} == ${id}` };
-  });
+  const { channelIds } = filters;
 
   promptSurveyTrigger.event.channel_ids = channelIds;
-  promptSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
   const createPromptTrigger = await client.workflows.triggers.create(
     promptSurveyTrigger,
   );
@@ -76,7 +72,6 @@ export async function createReactionTriggers(
   }
 
   removeSurveyTrigger.event.channel_ids = channelIds;
-  removeSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
   const createRemoveTrigger = await client.workflows.triggers.create(
     removeSurveyTrigger,
   );
@@ -95,17 +90,13 @@ export async function createReactionTriggers(
 export function updateReactionTriggers(
   client: SlackAPIClient,
   triggers: ReactionTriggerResponseObject[],
-  filters: { channelIds: string[]; reactorIds: string[] },
+  filters: { channelIds: string[] },
 ) {
-  const { channelIds, reactorIds } = filters;
-  const reactorFilter = reactorIds.map((id) => {
-    return { statement: `{{data.user_id}} == ${id}` };
-  });
+  const { channelIds } = filters;
 
   triggers.forEach(async (trigger) => {
     if (trigger.event_type === "slack#/events/reaction_added") {
       promptSurveyTrigger.event.channel_ids = channelIds;
-      promptSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
       const updatePromptTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...promptSurveyTrigger });
       if (!updatePromptTrigger.ok) {
@@ -119,7 +110,6 @@ export function updateReactionTriggers(
     removeSurveyTrigger.event.event_type;
     if (trigger.event_type === removeSurveyTrigger.event.event_type) {
       removeSurveyTrigger.event.channel_ids = channelIds;
-      removeSurveyTrigger.event.filter.root.inputs[1].inputs = reactorFilter;
       const updateRemoveTrigger = await client.workflows.triggers
         .update({ trigger_id: trigger.id, ...removeSurveyTrigger });
       if (!updateRemoveTrigger.ok) {
@@ -139,17 +129,4 @@ export function getReactionTriggerChannelIds(
   triggers: ReactionTriggerResponseObject[],
 ): Set<string> {
   return new Set(...triggers.map((t) => t.channel_ids));
-}
-
-/**
- * getReactionTriggerSurveyorIds returns all user_ids filtered by
- * active reaction event triggers
- */
-export function getReactionTriggerSurveyorIds(
-  triggers: ReactionTriggerResponseObject[],
-): Set<string> {
-  return new Set(
-    triggers.flatMap((t) => t.filter.root.inputs[1].inputs)
-      .map((filter) => filter.statement.split(" ").pop()),
-  );
 }
