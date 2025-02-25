@@ -36,7 +36,7 @@ const AnswerSurveyWorkflow = DefineWorkflow({
 /**
  * For collecting input from users, we recommend the
  * built-in OpenForm function as a first step.
- * https://api.slack.com/automation/functions#open-a-form
+ * https://api.slack.com/reference/functions/open_form
  */
 
 // Step 1: Collect feedback in a form

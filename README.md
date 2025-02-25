@@ -153,41 +153,27 @@ the app locally.
 
 #### Initiate the OAuth2 Flow
 
-With your Google project created and the Client ID and secret set, you're ready
-to initiate the OAuth flow!
+With your Google project created and the Client ID and secret set, you're just
+about ready to initiate the OAuth flow!
 
-If all the right values are in place, the following command will prompt you to
-choose an app, select a provider (hint: choose the `google` one), then pick the
-Google account you want to authenticate with:
+The "Create a survey" workflow collects credentials using the
+[end user tokens](https://api.slack.com/automation/external-auth#workflow__using-end-user-tokens)
+that are gathered when this workflow is invoked. This prompts the person running
+the workflow to authenticate with Google and then performs actions as the
+authenticated account.
 
-```sh
-$ slack external-auth add
-```
+Keep reading on to create a link into this workflow and to connect your account!
 
-> :unlock: Spreadsheets generated as part of the **Create a survey** workflow
-> will be created from the account you authenticate with! To limit the users
-> that can create surveys, an **Event configurator** workflow is used.
+#### Collaborating with External Authentication
 
-Once you've successfully connected your account, you're almost ready to create
-surveys at the press of a reaction!
+When developing collaboratively on a deployed app, the external authentication
+tokens used for your app will be shared by all collaborators. For this reason,
+we recommend creating your Google OAuth App using an organization account so all
+collaborators can access the same account.
 
-To complete the connection process, you need to let your app know what
-authenticated account you'll be using for specific workflows.
-
-For this specific app, only the `CreateSurvey` workflow requires a configured
-external Google account, so we can set that up with our freshly authed account.
-To do so, run:
-
-```sh
-slack external-auth select-auth
-```
-
-Select the workspace and app environment for your app, then select the
-`#/workflows/create_survey` workflow to give it access to your Google account.
-Then, select the same provider and the external account that you authenticated
-with above.
-
-At last - you're all set to survey! :sparkles:
+Local development does not require a shared account, as each developer will have
+their own local app and can individually add their own external authentication
+tokens.
 
 ## Running Your Project Locally
 
@@ -252,13 +238,12 @@ $ slack trigger create --trigger-def triggers/configurator.ts
 ### Using the Configurator Trigger
 
 With the configurator link trigger (`triggers/configurator.ts`) you can
-configure the channel list and surveying users, as shown below:
+configure the list of channels to survey, as shown below:
 
-<img src="https://user-images.githubusercontent.com/18134219/215911063-e3ab2892-1644-4f63-9383-f37be2954172.gif" width="600">
+<img src="https://github.com/slack-samples/deno-simple-survey/assets/18134219/479bcfb9-ca83-4844-a98a-02966d6d595d" width="600">
 
-Once the app is added to the channel being surveyed, configured users that add a
-`:clipboard:` reaction to a message will begin the survey process with a prompt
-to create a new survey.
+Once the app is added to the surveying channels, adding a `:clipboard:` reaction
+to a message will begin the survey process with a prompt to create a new survey.
 
 ## Datastores
 
