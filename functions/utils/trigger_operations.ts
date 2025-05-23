@@ -30,7 +30,7 @@ export async function findReactionTriggers(
   if (!allTriggers.ok) {
     throw new TriggerOperationError(
       allTriggers.error,
-      `Failed to list all triggers!`,
+      "Failed to list all triggers!",
     );
   }
 

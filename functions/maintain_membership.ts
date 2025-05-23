@@ -2,7 +2,7 @@ import { DefineFunction, SlackFunction } from "deno-slack-sdk/mod.ts";
 import {
   findReactionTriggers,
   getReactionTriggerChannelIds,
-  ReactionTriggerResponseObject,
+  type ReactionTriggerResponseObject,
 } from "./utils/trigger_operations.ts";
 import { isTriggerOperationError } from "./utils/errors.ts";
 
