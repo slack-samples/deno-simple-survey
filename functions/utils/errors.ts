@@ -13,7 +13,7 @@ export class TriggerOperationError extends Error {
  * https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
  */
 export function isTriggerOperationError(
-  err: Error,
+  err: unknown,
 ): err is TriggerOperationError {
   return err instanceof TriggerOperationError;
 }

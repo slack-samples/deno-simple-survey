@@ -5,7 +5,7 @@ import {
   findReactionTriggers,
   getReactionTriggerChannelIds,
   getReactionTriggerSurveyorIds,
-  ReactionTriggerResponseObject,
+  type ReactionTriggerResponseObject,
   updateReactionTriggers,
 } from "./utils/trigger_operations.ts";
 import { isTriggerOperationError } from "./utils/errors.ts";
