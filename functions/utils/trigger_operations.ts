@@ -1,5 +1,5 @@
-import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { EventTriggerResponseObject } from "deno-slack-api/typed-method-types/workflows/triggers/event.ts";
+import type { SlackAPIClient } from "deno-slack-sdk/types.ts";
+import type { EventTriggerResponseObject } from "deno-slack-api/typed-method-types/workflows/triggers/event.ts";
 
 import PromptSurveyWorkflow from "../../workflows/prompt_survey.ts";
 import RemoveSurveyWorkflow from "../../workflows/remove_survey.ts";
@@ -30,7 +30,7 @@ export async function findReactionTriggers(
   if (!allTriggers.ok) {
     throw new TriggerOperationError(
       allTriggers.error,
-      `Failed to list all triggers!`,
+      "Failed to list all triggers!",
     );
   }
 
