@@ -32,6 +32,6 @@
   "imports": {
     "deno-slack-sdk/": "https://deno.land/x/deno_slack_sdk@2.15.1/",
     "deno-slack-api/": "https://deno.land/x/deno_slack_api@2.8.0/",
-    "@std/dotenv": "jsr:@std/dotenv@^0.225.4"
+    "@std/dotenv": "jsr:@std/dotenv@^0.225.5"
   }
 }
