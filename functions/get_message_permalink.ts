@@ -1,4 +1,4 @@
-import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { DefineFunction, Schema, SlackFunction } from "@slack/sdk";
 
 export const GetMessagePermalinkFunctionDefinition = DefineFunction({
   callback_id: "get_message_permalink",

@@ -1,4 +1,4 @@
-import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { DefineWorkflow, Schema } from "@slack/sdk";
 import { CreatePromptTriggerFunctionDefinition } from "../functions/create_prompt_trigger.ts";
 import { GetMessagePermalinkFunctionDefinition } from "../functions/get_message_permalink.ts";
 import { SaveSurveyFunctionDefinition } from "../functions/save_survey.ts";
