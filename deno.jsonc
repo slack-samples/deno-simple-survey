@@ -31,7 +31,7 @@
   },
   "imports": {
     "@slack/api": "jsr:@slack/api@2.9.0",
-    "@slack/sdk": "jsr:@slack/sdk@2.15.2-dev.1",
+    "@slack/sdk": "jsr:@slack/sdk@2.15.2",
     "@slack/api-event-trigger": "https://raw.githubusercontent.com/slackapi/deno-slack-api/main/src/typed-method-types/workflows/triggers/event.ts",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.5"
   }
