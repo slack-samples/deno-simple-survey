@@ -1,4 +1,4 @@
-import type { Trigger } from "deno-slack-sdk/types.ts";
+import type { Trigger } from "@slack/sdk/types.ts";
 import RemoveSurveyWorkflow from "../../workflows/remove_survey.ts";
 
 const removeSurveyTrigger: Trigger<typeof RemoveSurveyWorkflow.definition> = {

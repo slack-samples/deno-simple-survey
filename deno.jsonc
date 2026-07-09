@@ -30,8 +30,9 @@
     "test": "deno fmt --check && deno lint && deno test --permit-no-files --allow-read"
   },
   "imports": {
-    "deno-slack-sdk/": "https://deno.land/x/deno_slack_sdk@2.15.1/",
-    "deno-slack-api/": "https://deno.land/x/deno_slack_api@2.8.0/",
+    "@slack/api": "jsr:@slack/api@2.9.0",
+    "@slack/sdk": "jsr:@slack/sdk@2.15.2",
+    "@slack/api-event-trigger": "https://raw.githubusercontent.com/slackapi/deno-slack-api/main/src/typed-method-types/workflows/triggers/event.ts",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.5"
   }
 }

@@ -1,5 +1,5 @@
-import type { Trigger } from "deno-slack-sdk/types.ts";
-import { TriggerTypes } from "deno-slack-api/mod.ts";
+import type { Trigger } from "@slack/sdk/types.ts";
+import { TriggerTypes } from "@slack/api";
 import MaintenanceJobWorkflow from "../workflows/maintenance_job.ts";
 
 /**
