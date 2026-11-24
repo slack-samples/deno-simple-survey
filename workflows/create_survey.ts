@@ -1,4 +1,4 @@
-import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { DefineWorkflow, Schema } from "@slack/sdk";
 
 import { CreateGoogleSheetFunctionDefinition } from "../functions/create_google_sheet.ts";
 import { CreateTriggerFunctionDefinition } from "../functions/create_survey_trigger.ts";

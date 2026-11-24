@@ -1,4 +1,4 @@
-import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { DefineFunction, Schema, SlackFunction } from "@slack/sdk";
 
 // Configuration information for the storing spreadsheet
 const GOOGLE_SPREADSHEET_RANGE = "Responses!A2:C2";

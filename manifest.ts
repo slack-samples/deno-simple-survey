@@ -1,4 +1,4 @@
-import { Manifest } from "deno-slack-sdk/mod.ts";
+import { Manifest } from "@slack/sdk";
 
 import GoogleProvider from "./external_auth/google_provider.ts";
 import SurveyDatastore from "./datastores/survey_datastore.ts";

@@ -1,4 +1,4 @@
-import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
+import { DefineWorkflow, Schema } from "@slack/sdk";
 import { RemoveThreadTriggerFunctionDefinition } from "../functions/remove_thread_trigger.ts";
 
 const RemoveSurveyWorkflow = DefineWorkflow({

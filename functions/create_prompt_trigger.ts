@@ -1,4 +1,4 @@
-import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
+import { DefineFunction, Schema, SlackFunction } from "@slack/sdk";
 import CreateSurveyWorkflow from "../workflows/create_survey.ts";
 
 export const CreatePromptTriggerFunctionDefinition = DefineFunction({

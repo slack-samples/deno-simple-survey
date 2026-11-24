@@ -1,4 +1,4 @@
-import { DefineWorkflow } from "deno-slack-sdk/mod.ts";
+import { DefineWorkflow } from "@slack/sdk";
 import { MaintainMembershipFunctionDefinition } from "../functions/maintain_membership.ts";
 
 const MaintenanceJobWorkflow = DefineWorkflow({
